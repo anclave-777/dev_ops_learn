@@ -58,16 +58,38 @@ root@vagrant:/home/vagrant# echo netology > /proc/$$/fd/5
 bash: /proc/1031/fd/5: No such file or directory
 
 1. Получится ли в качестве входного потока для pipe использовать только stderr команды, не потеряв при этом отображение stdout на pty? Напоминаем: по умолчанию через pipe передается только stdout команды слева от `|` на stdin команды справа.
-
-
-
-
-
-
 Это можно сделать, поменяв стандартные потоки местами через промежуточный новый дескриптор, который вы научились создавать в предыдущем вопросе.
+Ответ:
+Получится
+root@vagrant:/home#  ls /example 3>&2 2>&1 1>&3 | grep -n "file"
+root@vagrant:/home#  1:ls: cannot access '/example': No such file or directory
+
+
 1. Что выведет команда `cat /proc/$$/environ`? Как еще можно получить аналогичный по содержанию вывод?
+Ответ:
+vagrant@vagrant:~$ cat /proc/$$/environ
+USER=vagrantLOGNAME=vagrantHOME=/home/vagrantPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/binSHELL=/bin/bashTERM=xtermXDG_SESSION_ID=32XDG_RUNTIME_DIR=/run/user/1000DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/busXDG_SESSION_TYPE=ttyXDG_SESSION_CLASS=userMOTD_SHOWN=pamLANG=en_US.UTF-8LANGUAGE=en_US:SSH_CLIENT=172.28.128.1 53235 22SSH_CONNECTION=172.28.128.1 53235 172.28.128.3 22SSH_TTY=/dev/pts/1vagrant@vagrant:~$ 
+
+Аналог - env
+
+
 1. Используя `man`, опишите что доступно по адресам `/proc/<PID>/cmdline`, `/proc/<PID>/exe`.
+Ответ:
+man proc | grep -C 10 cmdline
+
+/proc/[pid]/cmdline - файл, доступный только для чтения. Содержит полную командную строку и аргументы, в которой запущен данный процесс
+
+man proc | grep -C 5 exe
+
+/proc/[pid]/exe - символьная ссылка на файл, который запускал процесс
+
 1. Узнайте, какую наиболее старшую версию набора инструкций SSE поддерживает ваш процессор с помощью `/proc/cpuinfo`.
+Ответ:
+SSE4_2
+vagrant@vagrant:~$ cat /proc/cpuinfo | grep sse
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx rdrand hypervisor lahf_lm abm 3dnowprefetch invpcid_single fsgsbase avx2 invpcid rdseed clflushopt md_clear flush_l1d arch_capabilities
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx rdrand hypervisor lahf_lm abm 3dnowprefetch invpcid_single fsgsbase avx2 invpcid rdseed clflushopt md_clear flush_l1d arch_capabilities
+
 1. При открытии нового окна терминала и `vagrant ssh` создается новая сессия и выделяется pty. Это можно подтвердить командой `tty`, которая упоминалась в лекции 3.2. Однако:
 
     ```bash
@@ -76,8 +98,52 @@ bash: /proc/1031/fd/5: No such file or directory
     ```
 
 	Почитайте, почему так происходит, и как изменить поведение.
+Ответ:
+tty выводит имя терминала, связанного с stdin. Нужно добавть в команду ключ:
+
+     -t      Force pseudo-terminal allocation.  This can be used to execute arbitrary
+             screen-based programs on a remote machine, which can be very useful, e.g.
+             when implementing menu services.  Multiple -t options force tty alloca‐
+             tion, even if ssh has no local tty.
+
+Часть вывода команды man ssh 
+В результате:
+vagrant@vagrant:~$ ssh localhost 'tty' -t
+The authenticity of host 'localhost (::1)' can't be established.
+ECDSA key fingerprint is SHA256:wSHl+h4vAtTT7mbkj2lbGyxWXWTUf6VUliwpncjwLPM.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? ^C
+
+
 1. Бывает, что есть необходимость переместить запущенный процесс из одной сессии в другую. Попробуйте сделать это, воспользовавшись `reptyr`. Например, так можно перенести в `screen` процесс, который вы запустили по ошибке в обычной SSH-сессии.
+Ответ:
+Устанавливаем reptur
+vim test - открываем файл в 1 терминале
+vagrant@vagrant:~$ vim test
+
+Идем во второй и устанавливаем значение kernel.yama.ptrace_scope = 0
+vagrant@vagrant:~$ sudo vim /etc/sysctl.d/10-ptrace.conf
+
+Применяем параметры ядра
+vagrant@vagrant:~$ sysctl -p /etc/sysctl.d/10-ptrace.conf
+sysctl: permission denied on key "kernel.yama.ptrace_scope", ignoring
+vagrant@vagrant:~$ sudo sysctl -p /etc/sysctl.d/10-ptrace.conf
+kernel.yama.ptrace_scope = 0
+
+Выясняем pid  терминале
+vagrant@vagrant:~$ ps -ef | grep test
+vagrant     2682    2231  0 18:03 pts/1    00:00:00 vim test
+
+и открываем его
+reptyr -s 2682
+
 1. `sudo echo string > /root/new_file` не даст выполнить перенаправление под обычным пользователем, так как перенаправлением занимается процесс shell'а, который запущен без `sudo` под вашим пользователем. Для решения данной проблемы можно использовать конструкцию `echo string | sudo tee /root/new_file`. Узнайте что делает команда `tee` и почему в отличие от `sudo echo` команда с `sudo tee` будет работать.
+Ответ:
+Посмотреть описание рабоыт можно в man
+Команда tee читает из stdin и пишет в stdout и файлы
+
+В sudo echo string - sudo применяется к echo, а не к записи в файл.
+
+sudo tee - sudo применяется к tee, таким образом у tee будут права на запись в файл. Таким образом echo выполняется без sudo (обычным пользователем), а вывод stdout echo перенаправляется на stdin tee, запущенной от sudo, и она записывает данные в файл.
 
  
  ---
