@@ -5,9 +5,79 @@
     * поместите его в автозагрузку,
     * предусмотрите возможность добавления опций к запускаемому процессу через внешний файл (посмотрите, например, на `systemctl cat cron`),
     * удостоверьтесь, что с помощью systemctl процесс корректно стартует, завершается, а после перезагрузки автоматически поднимается.
+Ответ:
+  ```
+  Скачал wget https://github.com/prometheus/node_exporter/releases/download/v1.2.0/node_exporter-1.2.0.linux-amd64.tar.gz
+  Распаковал tar xvfz node_exporter-1.2.0.linux-amd64.tar.gz
+  Сделал юнит файл:
+  root@vagrant:/home/vagrant# cat /etc/systemd/system/node-exporter.service      
+[Unit]
+Description=Node Exporter
+ 
+[Service]
+ExecStart=/home/vagrant/node_exporter-1.2.0.linux-amd64/node_exporter
+ 
+[Install]
+WantedBy=multi-user.target
+Скомандовал:
+root@vagrant:/home/vagrant# systemctl daemon-reload
+root@vagrant:/home/vagrant# systemctl start node-exporter.service
+
+Сервис работает.
+root@vagrant:/home/vagrant# systemctl status node-exporter.service
+● node-exporter.service - Node Exporter
+     Loaded: loaded (/etc/systemd/system/node-exporter.service; enabled; vendor preset: enabled)
+     Active: active (running) since Fri 2021-11-19 17:34:23 UTC; 4s ago
+   Main PID: 5910 (node_exporter)
+      Tasks: 4 (limit: 1071)
+     Memory: 2.2M
+     CGroup: /system.slice/node-exporter.service
+             └─5910 /home/vagrant/node_exporter-1.2.0.linux-amd64/node_exporter
+
+Nov 19 17:34:23 vagrant node_exporter[5910]: level=info ts=2021-11-19T17:34:23.100Z caller=node_exporter.go:115 collector=thermal_zone
+Nov 19 17:34:23 vagrant node_exporter[5910]: level=info ts=2021-11-19T17:34:23.100Z caller=node_exporter.go:115 collector=time
+Nov 19 17:34:23 vagrant node_exporter[5910]: level=info ts=2021-11-19T17:34:23.100Z caller=node_exporter.go:115 collector=timex
+Nov 19 17:34:23 vagrant node_exporter[5910]: level=info ts=2021-11-19T17:34:23.100Z caller=node_exporter.go:115 collector=udp_queues
+Nov 19 17:34:23 vagrant node_exporter[5910]: level=info ts=2021-11-19T17:34:23.100Z caller=node_exporter.go:115 collector=uname
+Nov 19 17:34:23 vagrant node_exporter[5910]: level=info ts=2021-11-19T17:34:23.100Z caller=node_exporter.go:115 collector=vmstat
+Nov 19 17:34:23 vagrant node_exporter[5910]: level=info ts=2021-11-19T17:34:23.100Z caller=node_exporter.go:115 collector=xfs
+Nov 19 17:34:23 vagrant node_exporter[5910]: level=info ts=2021-11-19T17:34:23.100Z caller=node_exporter.go:115 collector=zfs
+Nov 19 17:34:23 vagrant node_exporter[5910]: level=info ts=2021-11-19T17:34:23.100Z caller=node_exporter.go:199 msg="Listening on" address=:9100
+Nov 19 17:34:23 vagrant node_exporter[5910]: level=info ts=2021-11-19T17:34:23.100Z caller=tls_config.go:191 msg="TLS is disabled." http2=false
+  ```
 
 1. Ознакомьтесь с опциями node_exporter и выводом `/metrics` по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
-1. Установите в свою виртуальную машину [Netdata](https://github.com/netdata/netdata). Воспользуйтесь [готовыми пакетами](https://packagecloud.io/netdata/netdata/install) для установки (`sudo apt install -y netdata`). После успешной установки:
+Ответ:
+ ```
+node_network_receive_bytes_total{device="eth0"}  
+node_network_receive_errs_total{device="eth0"}  
+node_network_transmit_bytes_total{device="eth0"}  
+node_network_transmit_errs_total{device="eth0"}
+
+node_disk_io_time_seconds_total{device="sda"}
+node_disk_read_bytes_total{device="sda"}  
+node_disk_read_time_seconds_total{device="sda"}  
+node_disk_written_bytes_total{device="sda"}
+node_disk_write_time_seconds_total{device="sda"} 
+
+node_memory_MemAvailable_bytes  
+node_memory_MemFree_bytes  
+
+node_cpu_seconds_total{cpu="0",mode="user"}
+node_cpu_seconds_total{cpu="0",mode="idle"}  
+node_cpu_seconds_total{cpu="0",mode="iowait"}  
+node_cpu_seconds_total{cpu="0",mode="system"}  
+
+node_cpu_seconds_total{cpu="1",mode="user"}
+node_cpu_seconds_total{cpu="1",mode="idle"}  
+node_cpu_seconds_total{cpu="1",mode="iowait"}  
+node_cpu_seconds_total{cpu="1",mode="system"}  
+
+process_cpu_seconds_total  
+
+
+ ```
+3. Установите в свою виртуальную машину [Netdata](https://github.com/netdata/netdata). Воспользуйтесь [готовыми пакетами](https://packagecloud.io/netdata/netdata/install) для установки (`sudo apt install -y netdata`). После успешной установки:
     * в конфигурационном файле `/etc/netdata/netdata.conf` в секции [web] замените значение с localhost на `bind to = 0.0.0.0`,
     * добавьте в Vagrantfile проброс порта Netdata на свой локальный компьютер и сделайте `vagrant reload`:
 
