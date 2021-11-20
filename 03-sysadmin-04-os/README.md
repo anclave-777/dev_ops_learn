@@ -86,12 +86,117 @@ process_cpu_seconds_total
     ```
 
     После успешной перезагрузки в браузере *на своем ПК* (не в виртуальной машине) вы должны суметь зайти на `localhost:19999`. Ознакомьтесь с метриками, которые по умолчанию собираются Netdata и с комментариями, которые даны к этим метрикам.
+Ответ:
+
+    На 0.0.0.0 повесить данный сервис в моем случае не получится в силу особенности конфигурации сетевых интерфейсов на машине. Повесил процесс на маршрутизируемый адрес
+```
+
+  
+ root@vagrant:/home/vagrant# cat /etc/netdata/netdata.conf
+[global]
+        run as user = netdata
+        web files owner = root
+        web files group = root
+        bind socket to IP = 172.28.128.3 
+ ```
+ ```
+   vagrant@vagrant:~$ netstat -tulpan | grep 19999
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp        0      0 172.28.128.3:19999      0.0.0.0:*               LISTEN    
+```
+
+Резултат:
+
+![image](https://user-images.githubusercontent.com/44027303/142722120-1d3d5e8d-d290-457b-8fcd-1c3d92162d6d.png)
+
 
 1. Можно ли по выводу `dmesg` понять, осознает ли ОС, что загружена не на настоящем оборудовании, а на системе виртуализации?
-1. Как настроен sysctl `fs.nr_open` на системе по-умолчанию? Узнайте, что означает этот параметр. Какой другой существующий лимит не позволит достичь такого числа (`ulimit --help`)?
-1. Запустите любой долгоживущий процесс (не `ls`, который отработает мгновенно, а, например, `sleep 1h`) в отдельном неймспейсе процессов; покажите, что ваш процесс работает под PID 1 через `nsenter`. Для простоты работайте в данном задании под root (`sudo -i`). Под обычным пользователем требуются дополнительные опции (`--map-root-user`) и т.д.
-1. Найдите информацию о том, что такое `:(){ :|:& };:`. Запустите эту команду в своей виртуальной машине Vagrant с Ubuntu 20.04 (**это важно, поведение в других ОС не проверялось**). Некоторое время все будет "плохо", после чего (минуты) – ОС должна стабилизироваться. Вызов `dmesg` расскажет, какой механизм помог автоматической стабилизации. Как настроен этот механизм по-умолчанию, и как изменить число процессов, которое можно создать в сессии?
+Ответ:
 
+Можно
+
+```
+root@vagrant:/home/vagrant# dmesg | grep -i virtual
+[    0.000000] DMI: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[    0.002202] CPU MTRRs all blank - virtualized system.
+[    0.088692] Booting paravirtualized kernel on KVM
+[    2.323981] systemd[1]: Detected virtualization oracle.
+```
+
+3. Как настроен sysctl `fs.nr_open` на системе по-умолчанию? Узнайте, что означает этот параметр. Какой другой существующий лимит не позволит достичь такого числа (`ulimit --help`)?
+Ответ:
+```
+root@vagrant:/home/vagrant# cat /proc/sys/fs/nr_open
+1048576
+root@vagrant:/home/vagrant# /sbin/sysctl -n fs.nr_open
+1048576
+root@vagrant:/home/vagrant# 
+```
+
+nr_open - Максимальное число открытых дескрипторов файлов.
+
+```
+root@vagrant:/home/vagrant#  ulimit -n
+1024
+root@vagrant:/home/vagrant#  ulimit -Sn
+1024
+root@vagrant:/home/vagrant# /sbin/sysctl -n fs.nr_ope^C
+root@vagrant:/home/vagrant#  ulimit -Hn
+1048576
+```
+
+ulimit -n, ulimit -Sn - это мягкая версия лимитирования ресурсов
+
+ulimit -Hn - это жесткая версия лимитирования ресурсов
+
+5. Запустите любой долгоживущий процесс (не `ls`, который отработает мгновенно, а, например, `sleep 1h`) в отдельном неймспейсе процессов; покажите, что ваш процесс работает под PID 1 через `nsenter`. Для простоты работайте в данном задании под root (`sudo -i`). Под обычным пользователем требуются дополнительные опции (`--map-root-user`) и т.д.
+Ответ:
+
+Терминал 1:
+```
+root@vagrant:/home/vagrant# sleep 1h &
+[1] 8
+root@vagrant:/home/vagrant# 
+```
+
+Терминал 2:
+```
+root@vagrant:/# ps aux | grep sleep
+root           8  0.0  0.0   8076   528 pts/0    S    10:31   0:00 sleep 1h
+root          19  0.0  0.0   8900   736 pts/1    S+   10:34   0:00 grep --color=auto sleep
+root@vagrant:/# nsenter --target 8 --pid --mount    
+root@vagrant:/# ps aux
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  0.3   9836  3976 pts/0    S+   10:31   0:00 /bin/bash
+root           8  0.0  0.0   8076   528 pts/0    S    10:31   0:00 sleep 1h
+root           9  0.0  0.4   9836  4204 pts/1    S    10:33   0:00 -bash
+root          20  0.0  0.0   8996   696 pts/1    S    10:34   0:00 nsenter --target 8 --p
+root          21  0.0  0.3   9836  4000 pts/1    S    10:34   0:00 -bash
+root          30  0.0  0.3  11492  3388 pts/1    R+   10:34   0:00 ps aux
+```
+
+
+7. Найдите информацию о том, что такое `:(){ :|:& };:`. Запустите эту команду в своей виртуальной машине Vagrant с Ubuntu 20.04 (**это важно, поведение в других ОС не проверялось**). Некоторое время все будет "плохо", после чего (минуты) – ОС должна стабилизироваться. Вызов `dmesg` расскажет, какой механизм помог автоматической стабилизации. Как настроен этот механизм по-умолчанию, и как изменить число процессов, которое можно создать в сессии?
+Ответ:
+
+В конце dmesdg после запуска видим:
+```
+[ 3353.491664] cgroup: fork rejected by pids controller in /user.slice/user-1000.slice/session-1.scope
+```
+systemd создаёт cgroup для каждого пользователя, все процессы пользователя принадлежат этой группе. Каждая c-группа имеет лимит.
+
+
+Стандартное значение по умолчанию:
+root@vagrant:/home/vagrant# sysctl kernel.threads-max
+kernel.threads-max = 7142
+
+Можно изменить число процессов TasksMax в /etc/systemd/system/user-.slice.d/15-limits.conf
+
+
+```
+
+```
  
  ---
 
