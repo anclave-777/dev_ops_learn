@@ -19,8 +19,8 @@ root@vagrant:/home/vagrant# ll
 ```
 
 1. Сделайте `vagrant destroy` на имеющийся инстанс Ubuntu. Замените содержимое Vagrantfile следующим:
-
-    ```bash
+```
+    bash
     Vagrant.configure("2") do |config|
       config.vm.box = "bento/ubuntu-20.04"
       config.vm.provider :virtualbox do |vb|
@@ -32,10 +32,10 @@ root@vagrant:/home/vagrant# ll
         vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 2, '--device', 0, '--type', 'hdd', '--medium', lvm_experiments_disk1_path]
       end
     end
-    ```
+```
 
     Данная конфигурация создаст новую виртуальную машину с двумя дополнительными неразмеченными дисками по 2.5 Гб.
-
+```
 $ lsblk
 NAME                 MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
 sda                    8:0    0   64G  0 disk 
@@ -279,7 +279,7 @@ sdc                    8:32   0  2.5G  0 disk
 └─sdc2                 8:34   0  511M  0 part  
   └─md0                9:0    0 1018M  0 raid0 
     └─vg_md-lv_md    253:2    0  100M  0 lvm   /tmp/new
-
+```
 1. Протестируйте целостность файла:
 
     ```bash
@@ -287,12 +287,68 @@ sdc                    8:32   0  2.5G  0 disk
     root@vagrant:~# echo $?
     0
     ```
-
+ Ответ:
+ ```
+root@vagrant:~# gzip -t /tmp/new/test.gz
+root@vagrant:~# echo $?
+0
+ ```
+ 
 1. Используя pvmove, переместите содержимое PV с RAID0 на RAID1.
+Ответ:
+```
+root@vagrant:~# pvmove /dev/md0 /dev/md1
+  /dev/md0: Moved: 100.00%
+root@vagrant:~# lsblk
+NAME                 MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
+sda                    8:0    0   64G  0 disk  
+├─sda1                 8:1    0  512M  0 part  /boot/efi
+├─sda2                 8:2    0    1K  0 part  
+└─sda5                 8:5    0 63.5G  0 part  
+  ├─vgvagrant-root   253:0    0 62.6G  0 lvm   /
+  └─vgvagrant-swap_1 253:1    0  980M  0 lvm   [SWAP]
+sdb                    8:16   0  2.5G  0 disk  
+├─sdb1                 8:17   0    2G  0 part  
+│ └─md1                9:1    0    2G  0 raid1 
+│   └─vg_md-lv_md    253:2    0  100M  0 lvm   /tmp/new
+└─sdb2                 8:18   0  511M  0 part  
+  └─md0                9:0    0 1018M  0 raid0 
+sdc                    8:32   0  2.5G  0 disk  
+├─sdc1                 8:33   0    2G  0 part  
+│ └─md1                9:1    0    2G  0 raid1 
+│   └─vg_md-lv_md    253:2    0  100M  0 lvm   /tmp/new
+└─sdc2                 8:34   0  511M  0 part  
+  └─md0                9:0    0 1018M  0 raid0 
+```
 
 1. Сделайте `--fail` на устройство в вашем RAID1 md.
+Ответ:
+```
+root@vagrant:~#  mdadm /dev/md1 --fail /dev/sdb1
+mdadm: set /dev/sdb1 faulty in /dev/md1
+root@vagrant:~# cat /proc/mdstat
+Personalities : [linear] [multipath] [raid0] [raid1] [raid6] [raid5] [raid4] [raid10] 
+md0 : active raid0 sdc2[1] sdb2[0]
+      1042432 blocks super 1.2 512k chunks
+      
+md1 : active raid1 sdc1[1] sdb1[0](F)
+      2094080 blocks super 1.2 [2/1] [_U]
+      
+unused devices: <none>
+```
 
 1. Подтвердите выводом `dmesg`, что RAID1 работает в деградированном состоянии.
+Ответ:
+```
+root@vagrant:~# dmesg | grep md1
+[  634.314187] md/raid1:md1: not clean -- starting background reconstruction
+[  634.314188] md/raid1:md1: active with 2 out of 2 mirrors
+[  634.314199] md1: detected capacity change from 0 to 2144337920
+[  634.314573] md: resync of RAID array md1
+[  644.483118] md: md1: resync done.
+[ 1179.052913] md/raid1:md1: Disk failure on sdb1, disabling device.
+               md/raid1:md1: Operation continuing on 1 devices.
+```
 
 1. Протестируйте целостность файла, несмотря на "сбойный" диск он должен продолжать быть доступен:
 
@@ -301,9 +357,17 @@ sdc                    8:32   0  2.5G  0 disk
     root@vagrant:~# echo $?
     0
     ```
+    
+ Ответ:
+```
+ root@vagrant:~# gzip -t /tmp/new/test.gz
+root@vagrant:~# echo $?
+0
+```
 
 1. Погасите тестовый хост, `vagrant destroy`.
 
+Выполнено
  
  ---
 
