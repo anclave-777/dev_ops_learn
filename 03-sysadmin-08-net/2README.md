@@ -199,6 +199,25 @@ Paths: (24 available, best #7, table default)
 2. Создайте dummy0 интерфейс в Ubuntu. Добавьте несколько статических маршрутов. Проверьте таблицу маршрутизации.
 
 
+```
+$ ip link add name dum0 type dummy
+$ ip link set dum0 up
+$ ip address add 192.0.2.10/32 dev dum0
+
+
+4: dum0: <BROADCAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/ether 6a:91:58:4f:c1:00 brd ff:ff:ff:ff:ff:ff
+    inet 192.0.2.10/32 scope global dum0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::6891:58ff:fe4f:c100/64 scope link 
+       valid_lft forever preferred_lft forever
+root@vagrant:/home/vagrant# ip ro
+default via 10.0.2.2 dev eth0 proto dhcp src 10.0.2.15 metric 100 
+10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15 
+10.0.2.2 dev eth0 proto dhcp scope link src 10.0.2.15 metric 100 
+172.28.128.0/24 dev eth1 proto kernel scope link src 172.28.128.3 
+```
+
 
 
 3. Проверьте открытые TCP порты в Ubuntu, какие протоколы и приложения используют эти порты? Приведите несколько примеров.
@@ -234,13 +253,24 @@ kwaigon@resistance:~$
 4. Проверьте используемые UDP сокеты в Ubuntu, какие протоколы и приложения используют эти порты?
 
 
-Ответ:
-
-
 Пример приведен в предыдущем задании. Используеься также для установки туннелей для vpn
 
 
+Ответ:
+
+root@vagrant:/home/vagrant# netstat -tulpan | grep udp
+udp        0      0 0.0.0.0:111             0.0.0.0:*                           1/init              
+udp        0      0 127.0.0.1:8125          0.0.0.0:*                           722/netdata         
+udp        0      0 127.0.0.53:53           0.0.0.0:*                           566/systemd-resolve 
+udp        0      0 172.28.128.3:68         0.0.0.0:*                           400/systemd-network 
+udp        0      0 10.0.2.15:68            0.0.0.0:*                           400/systemd-network 
+udp6       0      0 :::111                  :::*                                1/init              
+udp6       0      0 ::1:8125                :::*                                722/netdata  
+
 5. Используя diagrams.net, создайте L3 диаграмму вашей домашней сети или любой другой сети, с которой вы работали. 
+
+![image](https://user-images.githubusercontent.com/44027303/144634262-b8e55dc5-c533-4201-bc6b-78828316455c.png)
+
 
  ---
 ## Задание для самостоятельной отработки (необязательно к выполнению)
