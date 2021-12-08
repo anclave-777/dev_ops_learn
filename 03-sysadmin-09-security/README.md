@@ -61,21 +61,25 @@
 ![image](https://user-images.githubusercontent.com/44027303/144900573-45f994ee-b969-428f-8d9b-ee17dc45f89b.png)
 
 
-Согласно этой же инструкции, подпишите Intermediate CA csr на сертификат для тестового домена (например, netology.example.com если действовали согласно инструкции).
-
 ![image](https://user-images.githubusercontent.com/44027303/144900628-28eb89c1-f55d-4b34-aa63-7279dc6617cf.png)
-
-
 
 ![image](https://user-images.githubusercontent.com/44027303/144900704-a290990f-6534-4986-ba50-4fa79e697ff0.png)
 
  
-3.	Используя PKI Secrets Engine, создайте Root CA и Intermediate CA. Обратите внимание на дополнительные материалы по созданию CA в Vault, если с изначальной инструкцией возникнут сложности.
-Реализовал через UI, файлики в директории с README:
+ 
+ 
        
 4.	Согласно этой же инструкции, подпишите Intermediate CA csr на сертификат для тестового домена (например, netology.example.com если действовали согласно инструкции).
+
+
+
+<img width="1631" alt="44" src="https://user-images.githubusercontent.com/44027303/145205545-4cabcaed-4ca2-4be2-9ed2-4da1e45da74f.png">
+
+
  
 5.	Поднимите на localhost nginx, сконфигурируйте default vhost для использования подписанного Vault Intermediate CA сертификата и выбранного вами домена. Сертификат из Vault подложить в nginx руками.
+
+```
 server {
         listen 80 default_server;
         listen [::]:80 default_server;
@@ -87,7 +91,11 @@ server {
         ssl_certificate /etc/nginx/netology.example.com.wokey.pem;
         ssl_certificate_key /etc/nginx/netology.example.com.key;
 }
+
+```
 6.	Модифицировав /etc/hosts и системный trust-store, добейтесь безошибочной с точки зрения HTTPS работы curl на ваш тестовый домен (отдающийся с localhost). Рекомендуется добавлять в доверенные сертификаты Intermediate CA. Root CA добавить было бы правильнее, но тогда при конфигурации nginx потребуется включить в цепочку Intermediate, что выходит за рамки лекции. Так же, пожалуйста, не добавляйте в доверенные сам сертификат хоста.
+
+```
 $ cat /etc/hosts | grep netology
 127.0.0.1 netology.example.com
 $ ll /usr/local/share/ca-certificates/
@@ -100,4 +108,4 @@ Updating certificates in /etc/ssl/certs...
 1 added, 0 removed; done.
 Running hooks in /etc/ca-certificates/update.d...
 done.
-
+```
