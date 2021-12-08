@@ -58,6 +58,9 @@
 3 Используя PKI Secrets Engine, создайте Root CA и Intermediate CA. Обратите внимание на дополнительные материалы по созданию CA в Vault, если с изначальной инструкцией возникнут сложности.
 Реализовал через UI, файлики в директории с README:
 
+<img width="1631" alt="1223" src="https://user-images.githubusercontent.com/44027303/145205899-b5ec80fe-9f32-4b82-b15b-154fd6305fa7.png">
+
+
 ![image](https://user-images.githubusercontent.com/44027303/144900573-45f994ee-b969-428f-8d9b-ee17dc45f89b.png)
 
 
