@@ -43,16 +43,12 @@
 Любые вопросы по решению задач задавайте в чате Slack.
 
 ---
-1
+1/2
 
 
 ![image](https://user-images.githubusercontent.com/44027303/144900119-d3d4f5c5-9319-462e-8e6f-b9e34aaf6529.png)
 
 
-2
-
-
-![image](https://user-images.githubusercontent.com/44027303/144900181-e2cd3cec-7a49-40a9-8b57-c481ebf3dbb0.png)
 
 
 3 Используя PKI Secrets Engine, создайте Root CA и Intermediate CA. Обратите внимание на дополнительные материалы по созданию CA в Vault, если с изначальной инструкцией возникнут сложности.
