@@ -8,6 +8,7 @@
 Создайте виртуальную машину Linux. +
 
 Установите ufw и разрешите к этой машине сессии на порты 22 и 443, при этом трафик на интерфейсе localhost (lo) должен ходить свободно на все порты.
+```
 root@vagrant:/home/vagrant#  ufw status numbered
 Status: active
 
@@ -16,9 +17,40 @@ Status: active
 [ 1] 22                         ALLOW IN    Anywhere                  
 [ 2] 443                        ALLOW IN    Anywhere                  
 [ 3] 22 (v6)                    ALLOW IN    Anywhere (v6)             
-[ 4] 443 (v6)                   ALLOW IN    Anywhere (v6)   
+[ 4] 443 (v6)                   ALLOW IN    Anywhere (v6)
+```
+
 Установите hashicorp vault (инструкция по ссылке).
+
+
+```
+root@vagrant:/home/vault2# systemctl status vault
+● vault.service - "HashiCorp Vault - A tool for managing secrets"
+     Loaded: loaded (/etc/systemd/system/vault.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sun 2021-12-12 11:30:55 UTC; 1min 54s ago
+       Docs: https://www.vaultproject.io/docs/
+   Main PID: 66824 (vault)
+      Tasks: 11 (limit: 1071)
+     Memory: 7.6M
+     CGroup: /system.slice/vault.service
+             └─66824 /usr/local/bin/vault server -config=/etc/vault/config.hcl
+
+Dec 12 11:30:55 vagrant vault[66824]:                      Cgo: disabled
+Dec 12 11:30:55 vagrant vault[66824]:          Cluster Address: https://0.0.0.0:8201
+Dec 12 11:30:55 vagrant vault[66824]:               Listener 1: tcp (addr: "0.0.0.0:8200", cluster address: "0.0.0.0:8201", max_request_duration: "1m30s", max_request_size: "33554432", >
+Dec 12 11:30:55 vagrant vault[66824]:                Log Level: info
+Dec 12 11:30:55 vagrant vault[66824]:                    Mlock: supported: true, enabled: false
+Dec 12 11:30:55 vagrant vault[66824]:                  Storage: file
+Dec 12 11:30:55 vagrant vault[66824]:                  Version: Vault v1.0.3
+Dec 12 11:30:55 vagrant vault[66824]:              Version Sha: 85909e3373aa743c34a6a0ab59131f61fd9e8e43
+Dec 12 11:30:55 vagrant vault[66824]: ==> Vault server started! Log data will stream in below:
+Dec 12 11:31:11 vagrant systemd[1]: /etc/systemd/system/vault.service:30: Missing '=', ignoring line.
+lines 1-20/20 (END)
+```
+
+
 Cоздайте центр сертификации по инструкции (ссылка) и выпустите сертификат для использования его в настройке веб-сервера nginx (срок жизни сертификата - месяц).
+
 Установите корневой сертификат созданного центра сертификации в доверенные в хостовой системе.
 Установите nginx.
 По инструкции (ссылка) настройте nginx на https, используя ранее подготовленный сертификат:
