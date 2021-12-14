@@ -61,16 +61,37 @@ done # Выполнено!
 ```
 
 3. Необходимо написать скрипт, который проверяет доступность трёх IP: 192.168.0.1, 173.194.222.113, 87.250.250.242 по 80 порту и записывает результат в файл log. Проверять доступность необходимо пять раз для каждого узла.
+
+Ответ:
+
+2 варианта c telnet и курл.
+
+```
+#!/bin/bash
+  
+list_ip=("192.168.0.1" "1.1.1.222" "87.250.250.242")
+
+for i in ${list_ip[@]}; do
+        { 
+        sleep 1 | telnet $i 80 >> log.log
+        sleep 1 | telnet $i 80 >> log.log
+        sleep 1 | telnet $i 80 >> log.log
+        sleep 1 | telnet $i 80 >> log.log
+        sleep 1 | telnet $i 80 >> log.log
+        }
+done
+```
+
 ```
 declare -i try=0
 
-list=("192.168.0.1:80" "173.194.222.113:80" "87.250.250.242:80")
+a=("192.168.0.1:80" "173.194.222.113:80" "87.250.250.242:80")
 
 while (($try < 5)); do
-  for ip in ${list_ip[@]}; do
+  for i in ${a[@]}; do
     {
-      echo "$try. check for $ip: "
-      curl --connect-timeout 5 $ip;
+      echo "$try. check for $i: "
+      curl --connect-timeout 5 $i;
       echo "check"
     } >>logs.log 2>&1
   done
@@ -79,7 +100,39 @@ while (($try < 5)); do
 done
 ```
 
-1. Необходимо дописать скрипт из предыдущего задания так, чтобы он выполнялся до тех пор, пока один из узлов не окажется недоступным. Если любой из узлов недоступен - IP этого узла пишется в файл error, скрипт прерывается
+ Необходимо дописать скрипт из предыдущего задания так, чтобы он выполнялся до тех пор, пока один из узлов не окажется недоступным. Если любой из узлов недоступен - IP этого узла пишется в файл error, скрипт прерывается
+
+Ответ:
+
+
+```
+#!/usr/bin/bash
+
+declare -i available=1
+declare -i last_status=0
+a=("192.168.0.1:80" "173.194.222.113:80" "87.250.250.242:80")
+
+while (($available == 1)); do
+  for i in ${a[@]}; do
+    {
+      curl --connect-timeout 5 $ip 1>/dev/null 2>/dev/null
+      last_status=$?
+
+      if (($last_status != 0)); then
+        echo "$i is not available" >>stop.log
+        available=0
+        break
+      fi
+    }
+  done
+  if (($last_status == 0)); then
+    let "try += 1"
+    sleep 5
+  fi
+done
+```
+
+
 
 ## Дополнительное задание (со звездочкой*) - необязательно к выполнению
 
