@@ -44,12 +44,43 @@ for result in result_os.split('\n'):
 
 ### Ваш скрипт:
 ```python
-???
+import os
+
+
+bash_command = ["cd /home/dev_ops_learn/dev_ops_learn/", "git status"]
+popen = os.popen(' && '.join(bash_command))
+result = popen.read()
+for res in result.split('\n'):
+ 	if res.find('modified:') != -1:
+        	prepare_result = res.replace('\tmodified:   ', '')
+        	i = os.getcwd()
+        	print(i + '/' + prepare_result)
 ```
 
 ### Вывод скрипта при запуске при тестировании:
 ```
-???
+Вывод команды:
+root@vagrant:/home/dev_ops_learn/dev_ops_learn# git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   test23
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   1.txt
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        sysadm-homeworks/.gitignore
+        sysadm-homeworks/README.md
+
+Вывод скрипта:
+root@vagrant:/home/dev_ops_learn/dev_ops_learn# ./pyth_2.py 
+/home/dev_ops_learn/dev_ops_learn/1.txt
 ```
 
 ## Обязательная задача 3
