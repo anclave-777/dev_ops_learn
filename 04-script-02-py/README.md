@@ -109,7 +109,9 @@ for res in result.split('\n'):
 
 ### Вывод скрипта при запуске при тестировании:
 ```
-???
+Вывод скрипта:
+root@vagrant:/home/dev_ops_learn/dev_ops_learn# ./pyth_2.py /dev
+/home/dev_ops_learn/dev_ops_learn/1.txt
 ```
 
 ## Обязательная задача 4
@@ -117,12 +119,56 @@ for res in result.split('\n'):
 
 ### Ваш скрипт:
 ```python
-???
+ #!/usr/bin/env python3
+ 
+from datetime import datetime
+import time
+import socket
+
+site = {
+  "drive.google.com": "", 
+  "mail.google.com": "", 
+  "google.com": ""
+}
+
+while (True):
+    for site, known_ip in site.items():
+        try:
+            new_ip = socket.gethostbyname(site)
+            
+            if (known_ip != "" and known_ip != new_ip):
+                print(f'[ERROR] {service} IP mismatch: {known_ip} {new_ip}')
+            else:
+                print(f'{site} - {new_ip}')
+
+            site[site] = new_ip
+
+        except:
+            print('Something goes wrong')
+
+    print(datetime.now(), site)
+    time.sleep(20)
 ```
 
 ### Вывод скрипта при запуске при тестировании:
 ```
-???
+vagrant@vagrant:~$ ./pyth_3.py  
+drive.google.com - 173.194.220.194
+mail.google.com - 64.233.164.19
+google.com - 64.233.161.100
+2021-12-20 18:29:08.482647 {'drive.google.com': '173.194.220.194', 'mail.google.com': '64.233.164.19', 'google.com': '64.233.161.100'}
+drive.google.com - 173.194.220.194
+[ERROR] mail.google.com IP mismatch: 64.233.164.19 64.233.164.18
+[ERROR] google.com IP mismatch: 64.233.161.100 64.233.161.101
+2021-12-20 18:29:28.486988 {'drive.google.com': '173.194.220.194', 'mail.google.com': '64.233.164.18', 'google.com': '64.233.161.101'}
+[ERROR] drive.google.com IP mismatch: 173.194.220.194 142.250.150.194
+mail.google.com - 64.233.164.18
+google.com - 64.233.161.101
+2021-12-20 18:29:48.520497 {'drive.google.com': '142.250.150.194', 'mail.google.com': '64.233.164.18', 'google.com': '64.233.161.101'}
+drive.google.com - 142.250.150.194
+mail.google.com - 64.233.164.18
+google.com - 64.233.161.101
+2021-12-20 18:30:08.534187 {'drive.google.com': '142.250.150.194', 'mail.google.com': '64.233.164.18', 'google.com': '64.233.161.101'}
 ```
 
 ## Дополнительное задание (со звездочкой*) - необязательно к выполнению
