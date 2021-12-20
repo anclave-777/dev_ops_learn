@@ -44,6 +44,7 @@ for result in result_os.split('\n'):
 
 ### Ваш скрипт:
 ```python
+#!/usr/bin/env python3
 import os
 
 
@@ -88,7 +89,22 @@ root@vagrant:/home/dev_ops_learn/dev_ops_learn# ./pyth_2.py
 
 ### Ваш скрипт:
 ```python
-???
+  #!/usr/bin/env python3
+  import os
+  import sys 
+		
+i = os.getcwd()
+
+if len(sys.argv) >= 2: 
+	i = sys.argv[1]
+
+bash_command = [ f"cd {i}", "cd /home/dev_ops_learn/dev_ops_learn/", "git status"]
+popen = os.popen(' && '.join(bash_command))
+result = popen.read()
+for res in result.split('\n'):
+ 	if res.find('modified:') != -1:
+        	prepare_result = res.replace('\tmodified:   ', '')
+        	print(f'{os.path.join(os.getcwd(), prepare_result)}')
 ```
 
 ### Вывод скрипта при запуске при тестировании:
