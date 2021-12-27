@@ -9,6 +9,13 @@
 
 Установите ufw и разрешите к этой машине сессии на порты 22 и 443, при этом трафик на интерфейсе localhost (lo) должен ходить свободно на все порты.
 ```
+sudo ufw allow 22
+sudo ufw allow 443
+sudo ufw allow in on lo to any
+sudo ufw allow out on lo to any
+```
+
+```
 root@vagrant:/home/vagrant#  ufw status numbered
 Status: active
 
@@ -18,12 +25,48 @@ Status: active
 [ 2] 443                        ALLOW IN    Anywhere                  
 [ 3] 22 (v6)                    ALLOW IN    Anywhere (v6)             
 [ 4] 443 (v6)                   ALLOW IN    Anywhere (v6)
+[ 5] Anywhere on lo             ALLOW IN    Anywhere
+[ 6]Anywhere (v6) on lo         ALLOW IN    Anywhere (v6)
+[ 7]Anywhere                    ALLOW OUT   Anywhere on lo
+[ 8]Anywhere (v6)               ALLOW OUT   Anywhere (v6) on lo
 ```
 
 Установите hashicorp vault (инструкция по ссылке).
 
 
 ```
+root@vagrant:/etc/vault# apt-get update && apt-get install vault
+Hit:1 http://archive.ubuntu.com/ubuntu focal InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu focal-updates InRelease                 
+Hit:3 https://apt.releases.hashicorp.com focal InRelease                       
+Hit:4 http://archive.ubuntu.com/ubuntu focal-backports InRelease               
+Hit:5 http://security.ubuntu.com/ubuntu focal-security InRelease
+Reading package lists... Done
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following NEW packages will be installed:
+  vault
+0 upgraded, 1 newly installed, 0 to remove and 110 not upgraded.
+Need to get 69.4 MB of archives.
+After this operation, 188 MB of additional disk space will be used.
+Get:1 https://apt.releases.hashicorp.com focal/main amd64 vault amd64 1.9.2 [69.4 MB]
+Fetched 69.4 MB in 10s (7,162 kB/s)                                            
+Selecting previously unselected package vault.
+(Reading database ... 78681 files and directories currently installed.)
+Preparing to unpack .../archives/vault_1.9.2_amd64.deb ...
+Unpacking vault (1.9.2) ...
+Setting up vault (1.9.2) ...
+Generating Vault TLS key and self-signed certificate...
+Generating a RSA private key
+..........................................................++++
+...++++
+writing new private key to 'tls.key'
+-----
+Vault TLS key and self-signed certificate have been generated in '/opt/vault/tls'.
+
+
+
 root@vagrant:/home/vault2# systemctl status vault
 ● vault.service - "HashiCorp Vault - A tool for managing secrets"
      Loaded: loaded (/etc/systemd/system/vault.service; enabled; vendor preset: enabled)
@@ -44,18 +87,54 @@ Dec 12 11:30:55 vagrant vault[66824]:                  Storage: file
 Dec 12 11:30:55 vagrant vault[66824]:                  Version: Vault v1.0.3
 Dec 12 11:30:55 vagrant vault[66824]:              Version Sha: 85909e3373aa743c34a6a0ab59131f61fd9e8e43
 Dec 12 11:30:55 vagrant vault[66824]: ==> Vault server started! Log data will stream in below:
-Dec 12 11:31:11 vagrant systemd[1]: /etc/systemd/system/vault.service:30: Missing '=', ignoring line.
 lines 1-20/20 (END)
 ```
 
 
 Cоздайте центр сертификации по инструкции (ссылка) и выпустите сертификат для использования его в настройке веб-сервера nginx (срок жизни сертификата - месяц).
 
+root@vagrant:~# vim /etc/vault.d/config.hcl
+
+```
+ui = false
+
+storage "file" {
+  path = "/opt/vault/data"
+}
+
+listener "tcp" {
+  address = "127.0.0.1:8200"
+  tls_disable = 1
+}
+
+root@vagrant:/etc/vault# export VAULT_ADDR=http://127.0.0.1:8200
+root@vagrant:/etc/vault# vault status                           
+Key                Value
+---                -----
+Seal Type          shamir
+Initialized        true
+Sealed             true
+Total Shares       122
+Threshold          122
+Unseal Progress    0/122
+Unseal Nonce       n/a
+Version            1.0.3
+HA Enabled         false
+```
+
+
 Установите корневой сертификат созданного центра сертификации в доверенные в хостовой системе.
+
 Установите nginx.
+```
+apt install nginx
+```
+
 По инструкции (ссылка) настройте nginx на https, используя ранее подготовленный сертификат:
+
 можно использовать стандартную стартовую страницу nginx для демонстрации работы сервера;
 можно использовать и другой html файл, сделанный вами;
+
 Откройте в браузере на хосте https адрес страницы, которую обслуживает сервер nginx.
 Создайте скрипт, который будет генерировать новый сертификат в vault:
 генерируем новый сертификат так, чтобы не переписывать конфиг nginx;
