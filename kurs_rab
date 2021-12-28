@@ -269,6 +269,12 @@ HA Enabled         false
 
 Установите корневой сертификат созданного центра сертификации в доверенные в хостовой системе.
 
+```
+ файл со скриншотом не захотел прикрепляться к документу, выложил на диск:
+https://drive.google.com/file/d/1Ze0ErBDVOEU3MMDikA4dqfknnDO3hL48/view?usp=sharing
+```
+
+
 Установите nginx.
 ```
 apt install nginx
