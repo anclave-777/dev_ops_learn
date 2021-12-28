@@ -93,6 +93,150 @@ lines 1-20/20 (END)
 
 Cоздайте центр сертификации по инструкции (ссылка) и выпустите сертификат для использования его в настройке веб-сервера nginx (срок жизни сертификата - месяц).
 
+```
+Запускаем сервер:
+
+vault server -dev -dev-root-token-id root
+```
+
+
+```
+# Включаем инфраструктуру PKI
+root@vagrant:~# vault secrets enable pki
+Success! Enabled the pki secrets engine at: pki/
+# Настраиваем PKI для выдачи сертификатов с максимальным временем жизни 87600 часов (10 лет)
+root@vagrant:~# vault secrets tune -max-lease-ttl=87600h pki
+Success! Tuned the secrets engine at: pki/
+# Генерируем корневой сертификат и сохраняем в файл CA_cert.crt
+root@vagrant:~# vault write -field=certificate pki/root/generate/internal common_name="example.com" ttl=87600h > CA_cert.crt
+# Настраиваем URL центра сертификации и отозванных сертификатов
+root@vagrant:/home/vagrant# vault write pki/config/urls \
+>      issuing_certificates="$VAULT_ADDR/v1/pki/ca" \
+>      crl_distribution_points="$VAULT_ADDR/v1/pki/crl"
+Success! Data written to: pki/config/urls
+
+root@vagrant:/home/vagrant# vault secrets enable -path=pki_int pki
+Success! Enabled the pki secrets engine at: pki_int/
+
+root@vagrant:/home/vagrant# vault secrets tune -max-lease-ttl=43800h pki_int
+Success! Tuned the secrets engine at: pki_int/
+
+
+root@vagrant:/home/vagrant# vault write -format=json pki_int/intermediate/generate/internal \
+>      common_name="example.com Intermediate Authority" \
+>      | jq -r '.data.csr' > pki_intermediate.csr
+
+
+root@vagrant:/home/vagrant# vault write pki_int/intermediate/set-signed certificate=@intermediate.cert.pem
+Success! Data written to: pki_int/intermediate/set-signed
+
+
+root@vagrant:/home/vagrant# vault write pki_int/roles/example-com allowed_domains="example.com" allow_bare_domains=true allow_subdomains=true max_ttl="720h"
+Success! Data written to: pki_int/roles/example-com
+
+
+
+root@vagrant:/home/vagrant# vault write pki_int/issue/example-com common_name="example.com" ttl="720h"
+Key                 Value
+---                 -----
+ca_chain            [-----BEGIN CERTIFICATE-----
+MIIDpjCCAo6gAwIBAgIUTjv+DZ0M47SOBp0OpZrTL/3Wb60wDQYJKoZIhvcNAQEL
+BQAwFjEUMBIGA1UEAxMLZXhhbXBsZS5jb20wHhcNMjExMjI3MDcyODQzWhcNMjYx
+MjI2MDcyOTEzWjAtMSswKQYDVQQDEyJleGFtcGxlLmNvbSBJbnRlcm1lZGlhdGUg
+QXV0aG9yaXR5MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2GsAXzKY
+w9/sLhSVUAnB9Dk0dEfQQywzZn7it1SvbtwFFcTs285cNkgDG8TgROfGzWaIc+0b
+Q70n/LDYoRcQMbgMq30krLQvErwnaj/L8DNkco9n1YE7nXYK1xU7MBgd7an3KmHB
+q5jA5oNBG713AmqmlmsItikfpwg9r3fw6ERiMN1m+7WLcy7gVGwmlwetZRHvYVhC
++Wbb/U7Tw0W2uhVA3cT85m5iTGcxHMf02fVaURnnYx155hdZPBWeqe3iKCyJmVSp
+BNn4vhP5suuXNKGQpDCihaun3rREBBpJoYSSw3vhgNEnrrvj0DOcAXv3c/rWYB8a
+p22U3GikRZ55vwIDAQABo4HUMIHRMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8E
+BTADAQH/MB0GA1UdDgQWBBTQ0PD5Zaxfub1gems30NynTw4GdDAfBgNVHSMEGDAW
+gBQfJHP0MpVVPY0C4ijPNCNX2oBRvzA7BggrBgEFBQcBAQQvMC0wKwYIKwYBBQUH
+MAKGH2h0dHA6Ly8xMjcuMC4wLjE6ODIwMC92MS9wa2kvY2EwMQYDVR0fBCowKDAm
+oCSgIoYgaHR0cDovLzEyNy4wLjAuMTo4MjAwL3YxL3BraS9jcmwwDQYJKoZIhvcN
+AQELBQADggEBAEA4dELb/SOmDWsnbM84tZ0zS3BDgW0zDG2nxHI7Y1yqqAdkh6xl
+x6ZiuMM7du8vgOO3j0PFPqjC3dlk0yjJPCakcIn/a+NljsFaF+ZHQmUNkOURvIO5
+4c5oSk9oAZ+vhkJXsIWW1b5aJTeRGlike0pFmz0+hWWJ7p+jluBMwOeGElB1Cu5G
+mVBBxJpREf57TN/hNJQ5zelvm+sMfMVWibYQzSC/5U20QlliHoEIzGpOtx6j1+dC
+8rWwXorC3pidWajvsJN3SyspEmYc0Y1YxFDDHyhEvCKyS/39CaImSrZu+oGgKoSu
+QMfjyOeIaOuSvN3v4PVWfrYpECwkbiiIafo=
+-----END CERTIFICATE-----]
+certificate         -----BEGIN CERTIFICATE-----
+MIIDXDCCAkSgAwIBAgIUH6KdNRrDKzsB2ccVR8J7y5kO8cwwDQYJKoZIhvcNAQEL
+BQAwLTErMCkGA1UEAxMiZXhhbXBsZS5jb20gSW50ZXJtZWRpYXRlIEF1dGhvcml0
+eTAeFw0yMTEyMjcwNzMyMDNaFw0yMjAxMjYwNzMyMzNaMBYxFDASBgNVBAMTC2V4
+YW1wbGUuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArYzjfNlk
+H2NeHu3Fbi7MUlFlrDdcyuH9YEEwmEYD04fR/ESzyCJLqLqYjhINQ2o63b1ND2ds
+LXmuMkEH2Phmu2lMkqPDi35+rEfOeB3bBnEYx0u/BDN3JDxtUcfUDJJbNdP13VyH
+BV1DiXQHI94hqLrnYO400kES9f8nNa3QGS7le9IpLazuO0jyqAeaqg8fwInSBKLc
+8Ot8ksz+ora/wgfG9Scj96x8jK+skDaC7rOU/mg7Qk1Oz/QxTxHhluBZ9rpA9W8J
+fg8dUfkTcyG37FWOOHMmDUVsA32FcleQACMsbWtbwuT2a3YWHpSRWAcIM6XPKKnb
+kZ+I/g9qw3PJCQIDAQABo4GKMIGHMA4GA1UdDwEB/wQEAwIDqDAdBgNVHSUEFjAU
+BggrBgEFBQcDAQYIKwYBBQUHAwIwHQYDVR0OBBYEFMZdxLxqm5hMEiQ6lLeEzANt
+8RtJMB8GA1UdIwQYMBaAFNDQ8PllrF+5vWB6azfQ3KdPDgZ0MBYGA1UdEQQPMA2C
+C2V4YW1wbGUuY29tMA0GCSqGSIb3DQEBCwUAA4IBAQAUKA5og04LPACUBwgcEUq6
+tanDFVTZmvJo+ZLby4D5qYAqSIpyDMIK0oNouk9Wx/pxPBfNAZEM98P4sLjRmZya
+v93oM8XVcANxlvub38DpdqWxG/qutWgjgjls+kyhRBtMZQGhLbdGlSe2QIAILs1+
+fvlgrXXQw+MaAW9KMzzPHFjh5v+/sROJY8PuzSM+DkBJK16u30+TeMb1hiH2/yhU
+n3xHrMUaxTdvc7ZThvoA5gYZ04owJdnE+i23eH7yD9mBQ213Q0OCdRM26tw1E/+z
+sIdNJCeXIH4mHuFAsRMLmi+qCkq+EQppi3WJ92nV+vqKr8dFWoXJYJBH9Yxonyj6
+-----END CERTIFICATE-----
+expiration          1643182353
+issuing_ca          -----BEGIN CERTIFICATE-----
+MIIDpjCCAo6gAwIBAgIUTjv+DZ0M47SOBp0OpZrTL/3Wb60wDQYJKoZIhvcNAQEL
+BQAwFjEUMBIGA1UEAxMLZXhhbXBsZS5jb20wHhcNMjExMjI3MDcyODQzWhcNMjYx
+MjI2MDcyOTEzWjAtMSswKQYDVQQDEyJleGFtcGxlLmNvbSBJbnRlcm1lZGlhdGUg
+QXV0aG9yaXR5MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2GsAXzKY
+w9/sLhSVUAnB9Dk0dEfQQywzZn7it1SvbtwFFcTs285cNkgDG8TgROfGzWaIc+0b
+Q70n/LDYoRcQMbgMq30krLQvErwnaj/L8DNkco9n1YE7nXYK1xU7MBgd7an3KmHB
+q5jA5oNBG713AmqmlmsItikfpwg9r3fw6ERiMN1m+7WLcy7gVGwmlwetZRHvYVhC
++Wbb/U7Tw0W2uhVA3cT85m5iTGcxHMf02fVaURnnYx155hdZPBWeqe3iKCyJmVSp
+BNn4vhP5suuXNKGQpDCihaun3rREBBpJoYSSw3vhgNEnrrvj0DOcAXv3c/rWYB8a
+p22U3GikRZ55vwIDAQABo4HUMIHRMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8E
+BTADAQH/MB0GA1UdDgQWBBTQ0PD5Zaxfub1gems30NynTw4GdDAfBgNVHSMEGDAW
+gBQfJHP0MpVVPY0C4ijPNCNX2oBRvzA7BggrBgEFBQcBAQQvMC0wKwYIKwYBBQUH
+MAKGH2h0dHA6Ly8xMjcuMC4wLjE6ODIwMC92MS9wa2kvY2EwMQYDVR0fBCowKDAm
+oCSgIoYgaHR0cDovLzEyNy4wLjAuMTo4MjAwL3YxL3BraS9jcmwwDQYJKoZIhvcN
+AQELBQADggEBAEA4dELb/SOmDWsnbM84tZ0zS3BDgW0zDG2nxHI7Y1yqqAdkh6xl
+x6ZiuMM7du8vgOO3j0PFPqjC3dlk0yjJPCakcIn/a+NljsFaF+ZHQmUNkOURvIO5
+4c5oSk9oAZ+vhkJXsIWW1b5aJTeRGlike0pFmz0+hWWJ7p+jluBMwOeGElB1Cu5G
+mVBBxJpREf57TN/hNJQ5zelvm+sMfMVWibYQzSC/5U20QlliHoEIzGpOtx6j1+dC
+8rWwXorC3pidWajvsJN3SyspEmYc0Y1YxFDDHyhEvCKyS/39CaImSrZu+oGgKoSu
+QMfjyOeIaOuSvN3v4PVWfrYpECwkbiiIafo=
+-----END CERTIFICATE-----
+private_key         -----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEArYzjfNlkH2NeHu3Fbi7MUlFlrDdcyuH9YEEwmEYD04fR/ESz
+yCJLqLqYjhINQ2o63b1ND2dsLXmuMkEH2Phmu2lMkqPDi35+rEfOeB3bBnEYx0u/
+BDN3JDxtUcfUDJJbNdP13VyHBV1DiXQHI94hqLrnYO400kES9f8nNa3QGS7le9Ip
+LazuO0jyqAeaqg8fwInSBKLc8Ot8ksz+ora/wgfG9Scj96x8jK+skDaC7rOU/mg7
+Qk1Oz/QxTxHhluBZ9rpA9W8Jfg8dUfkTcyG37FWOOHMmDUVsA32FcleQACMsbWtb
+wuT2a3YWHpSRWAcIM6XPKKnbkZ+I/g9qw3PJCQIDAQABAoIBAGT93I+Vjb76OxYy
+dTZGA15PwaOy38usMJ7nsJib/bQFkHuFmzz2QCLi2s2p0ZAObE0G0KYLIBdifKz/
+zMpE2rtqbkXTCILPTHWCn7KkZQVdoPawrGqMbGNoypDRgSMDtBIh0yxKoMPNXvTI
+0TLdG6cthGGSnKhRd/Aw16dUCwnrm/3PpcYi9XWb9l0xXNs/FG2FA64Di0ensZDE
+Qpn+RHW1xOP2Z6XAAkzgocbBPc/PitBoOnjzSlWZdaTXB58v86AnpdONrfkrIUfl
+MQ2qRM0yD2Rtxnt4JOU+F5m4I/U6Zjkw3MTlPgOJJfPlHGGqYm3a/Jc2AiOqf5RC
+y3YqblECgYEA10arKzYiJu76ME/n+WyYYXq30gboRckJjbmiwnQTikuw/PM4JNoj
+IlhkJgeXdGutgYynw3/hC0UWWWB407d6uWhP9REAl+xoztXXNB7YNnTT0fe+Fmb3
+smdV0rCJiQ8F7AyxsN7u0ZaXOmlDHOIlTtc7V9hOF9qJ9WR64iQBeXUCgYEAzmGJ
+6Y4mEktrM2d6KbQ5bOsP+7AprQ0UQ0285alHQ0N7hfoLU5YSLrh17n1gpTyzIV+Y
+BmNyhKK7PPmz6IrM6LyTgx9g4Ww2aRmwMbN2qJXBPxXoBitzjF7zBL1jvcc+wFEa
+uBv6eWD0n8Hj+gKNrKi47xDrg2x2WCeF8TgvysUCgYEAm5ne2wrzwIR3njgDikuu
+ELds6ohHlzlqiGAnfrn77bgsI4mBiVGKl6agLMTL+kBiVwNdt3dVKJo1P0D11MII
+GL+HG7HAZg9g6i+yr1+kFCh5eojBgtvGKdN7OyCTKNgNBcNfJGLe5+sbQAMZmWT0
+Zno30JTuTVuO4CpSj+ZKkokCgYBvZ6WbprkUbRPMJtKCCqBpFCaHlZuZp5LFlgQe
+8Rbfz2CxfL16fGsKP1ahy5pM+Aw2OrUE1c/umy15h80+/RYJmCoEwP56EQD6EPzU
+h2zJKjWryTZ7hh8UqfiDGXzq59AO3nkO40N9HAJQ7sgSoCg8CMPzgO2w/u6PPZ6H
+DO53hQKBgBBytorDY2z1QLczT7/br4aald7Y6rGVp+waIBs7v3PAwRq8S1Kuk9Ag
+8rDF8vULeussR5GegB2I2JGN1m1+h8z9hCmUfqLGSlyWzpc5uRlthruYC2MLZEHq
+txD+k3MvVhBwWI8c4jJDRsQwBlkKt9J8Mh8IWVSil6/hncYUdOsn
+-----END RSA PRIVATE KEY-----
+private_key_type    rsa
+serial_number       1f:a2:9d:35:1a:c3:2b:3b:01:d9:c7:15:47:c2:7b:cb:99:0e:f1:cc
+
+
+```
+
 root@vagrant:~# vim /etc/vault.d/config.hcl
 
 ```
