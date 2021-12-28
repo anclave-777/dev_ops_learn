@@ -272,17 +272,64 @@ HA Enabled         false
 Установите nginx.
 ```
 apt install nginx
+
+root@vagrant:/var/www/example.com# systemctl status nginx
+● nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+     Active: active (running) since Tue 2021-12-28 08:12:07 UTC; 3min 27s ago
+       Docs: man:nginx(8)
+    Process: 6244 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (c>
+    Process: 6255 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exite>
+   Main PID: 6256 (nginx)
+      Tasks: 3 (limit: 1071)
+     Memory: 3.5M
+     CGroup: /system.slice/nginx.service
+             ├─6256 nginx: master process /usr/sbin/nginx -g daemon on; master_process o>
+             ├─6257 nginx: worker process
+             └─6258 nginx: worker process
+
+Dec 28 08:12:07 vagrant systemd[1]: Starting A high performance web server and a reverse>
+Dec 28 08:12:07 vagrant systemd[1]: Started A high performance web server and a reverse >
+lines 1-16/16 (END)
 ```
 
 По инструкции (ссылка) настройте nginx на https, используя ранее подготовленный сертификат:
-
+```
+server {
+        listen              443 ssl;
+        server_name         example.com;
+        ssl_certificate     /home/vagrant/example.com.crt;
+        ssl_certificate_key /home/vagrant/example.com.key;
+        ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
+        ssl_ciphers         HIGH:!aNULL:!MD5;
+        root /var/www/example.com;
+            
+#           index index.html;
+        }
+```        
+        
 можно использовать стандартную стартовую страницу nginx для демонстрации работы сервера;
 можно использовать и другой html файл, сделанный вами;
 
+
+``` 
+root@vagrant:/var/www/example.com# cat index.html 
+<html>
+        <body>
+                <H1>PRIVET!</H1>
+        </body>
+</html>
+``` 
 Откройте в браузере на хосте https адрес страницы, которую обслуживает сервер nginx.
+
+
+
 Создайте скрипт, который будет генерировать новый сертификат в vault:
+
 генерируем новый сертификат так, чтобы не переписывать конфиг nginx;
+
 перезапускаем nginx для применения нового сертификата.
+
 Поместите скрипт в crontab, чтобы сертификат обновлялся какого-то числа каждого месяца в удобное для вас время.
 Результат
 Результатом курсовой работы должны быть снимки экрана или текст:
