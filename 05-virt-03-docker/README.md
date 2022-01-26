@@ -34,6 +34,19 @@ Hey, Netology
 ```
 Опубликуйте созданный форк в своем репозитории и предоставьте ответ в виде ссылки на https://hub.docker.com/username_repo.
 
+Ответ:
+
+https://hub.docker.com/repository/docker/anclave777/test_nginx
+
+***
+root@vagrant:/home/vagrant# docker ps
+CONTAINER ID   IMAGE                          COMMAND                  CREATED         STATUS         PORTS                                        NAMES
+dffc8ab78207   anclave777/test_nginx:latest   "/docker-entrypoint.…"   5 seconds ago   Up 4 seconds   0.0.0.0:80->80/tcp, :::80->80/tcp, 443/tcp   silly_dhawan
+***
+
+![image](https://user-images.githubusercontent.com/44027303/151188310-fbcd8f44-5672-4d01-94f1-305458046e8a.png)
+
+
 ## Задача 2
 
 Посмотрите на сценарий ниже и ответьте на вопрос:
