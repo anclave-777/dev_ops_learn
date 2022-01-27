@@ -38,11 +38,11 @@ Hey, Netology
 
 https://hub.docker.com/repository/docker/anclave777/test_nginx
 
-***
+```
 root@vagrant:/home/vagrant# docker ps
 CONTAINER ID   IMAGE                          COMMAND                  CREATED         STATUS         PORTS                                        NAMES
 dffc8ab78207   anclave777/test_nginx:latest   "/docker-entrypoint.…"   5 seconds ago   Up 4 seconds   0.0.0.0:80->80/tcp, :::80->80/tcp, 443/tcp   silly_dhawan
-***
+```
 
 ![image](https://user-images.githubusercontent.com/44027303/151188310-fbcd8f44-5672-4d01-94f1-305458046e8a.png)
 
@@ -115,22 +115,31 @@ dffc8ab78207   anclave777/test_nginx:latest   "/docker-entrypoint.…"   5 secon
 - Подключитесь во второй контейнер и отобразите листинг и содержание файлов в ```/data``` контейнера.
 
 Ответ:
-'''
+
+
+```
 # docker pull centos
 # mkdir info
-# docker run -tid --name Centos1 -v /home/vagrant/docker/info/:/share/info/ centos
-'''
+# docker run -tid --name centos1 -v /home/vagrant/docker/info/:/share/info/ centos
+```
 
+```
 # docker pull debian
-# docker run -tid --name Debian1 -v /home/vagrant/docker/info/:/info/ debian
+# docker run -tid --name debian1 -v /home/vagrant/docker/info/:/info/ debian
+```
 
+```
 # docker exec -ti centos1 bash
 [root@8e4468ea5b49 /]# echo Netology1 > /share/info/first
 [root@8e4468ea5b49 /]# exit
+```
 
 
+```
 # echo Netology2 > /home/vagrant/docker/info/second
+```
 
+```
 # docker exec -ti debian1 bash
 root@14fbc4e82258:/# ls -al /info
 total 16
@@ -143,7 +152,7 @@ Netology1
 root@14fbc4e82258:/# cat /info/second
 Netology2
 root@14fbc4e82258:/# exit
-
+```
 
 ## Задача 4 (*)
 
