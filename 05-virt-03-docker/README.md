@@ -114,6 +114,37 @@ dffc8ab78207   anclave777/test_nginx:latest   "/docker-entrypoint.…"   5 secon
 - Добавьте еще один файл в папку ```/data``` на хостовой машине;
 - Подключитесь во второй контейнер и отобразите листинг и содержание файлов в ```/data``` контейнера.
 
+Ответ:
+'''
+# docker pull centos
+# mkdir info
+# docker run -tid --name Centos1 -v /home/vagrant/docker/info/:/share/info/ centos
+'''
+
+# docker pull debian
+# docker run -tid --name Debian1 -v /home/vagrant/docker/info/:/info/ debian
+
+# docker exec -ti centos1 bash
+[root@8e4468ea5b49 /]# echo Netology1 > /share/info/first
+[root@8e4468ea5b49 /]# exit
+
+
+# echo Netology2 > /home/vagrant/docker/info/second
+
+# docker exec -ti debian1 bash
+root@14fbc4e82258:/# ls -al /info
+total 16
+drwxr-xr-x 2 root root 4096 Sep  21 20:31 .
+drwxr-xr-x 1 root root 4096 Sep  21 20:34 ..
+-rw-r--r-- 1 root root    9 Sep  21 20:49 first
+-rw-r--r-- 1 root root   10 Sep  21 20:52 second
+root@14fbc4e82258:/# cat /info/first
+Netology1
+root@14fbc4e82258:/# cat /info/second
+Netology2
+root@14fbc4e82258:/# exit
+
+
 ## Задача 4 (*)
 
 Воспроизвести практическую часть лекции самостоятельно.
