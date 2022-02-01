@@ -52,6 +52,11 @@
   <img width="1200" height="600" src="./assets/yc_02.png">
 </p>
 
+Ответ:
+
+![image](https://user-images.githubusercontent.com/44027303/151990567-08f00feb-ea74-425e-b45b-948eac491195.png)
+
+
 ## Задача 4 (*)
 
 Создать вторую ВМ и подключить её к мониторингу развёрнутому на первом сервере.
