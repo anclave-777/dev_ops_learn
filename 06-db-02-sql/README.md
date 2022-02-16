@@ -93,11 +93,137 @@ postgres(# );
 CREATE TABLE
 ```
 
+
+```
+postgres=# GRANT ALL PRIVILEGES ON orders TO "test-admin-user";
+GRANT
+postgres=# GRANT ALL PRIVILEGES ON clients TO "test-admin-user";
+GRANT
+```
+
+```
+postgres=# CREATE USER "test-simple-user" WITH PASSWORD 'test-simple-user';
+CREATE ROLE
+postgres=# GRANT SELECT, INSERT, UPDATE, DELETE ON orders TO "test-simple-user";
+GRANT
+postgres=# GRANT SELECT, INSERT, UPDATE, DELETE ON clients TO "test-simple-user";
+```
+
+
 Приведите:
 - итоговый список БД после выполнения пунктов выше,
 - описание таблиц (describe)
 - SQL-запрос для выдачи списка пользователей с правами над таблицами test_db
 - список пользователей с правами над таблицами test_db
+
+
+```
+postgres=# \c test_db                   
+You are now connected to database "test_db" as user "postgres".
+test_db=# \list
+                                 List of databases
+   Name    |  Owner   | Encoding |  Collate   |   Ctype    |   Access privileges   
+-----------+----------+----------+------------+------------+-----------------------
+ postgres  | postgres | UTF8     | en_US.utf8 | en_US.utf8 | 
+ template0 | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +
+           |          |          |            |            | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +
+           |          |          |            |            | postgres=CTc/postgres
+ test_db   | postgres | UTF8     | en_US.utf8 | en_US.utf8 | 
+(4 rows)
+
+test_db=#
+
+```
+
+```
+test_db=# GRANT SELECT, INSERT, UPDATE, DELETE ON clients TO "test-simple-user";
+GRANT
+test_db=# \d orders
+                      Table "public.orders"
+ Column |          Type          | Collation | Nullable | Default 
+--------+------------------------+-----------+----------+---------
+ id     | integer                |           | not null | 
+ name   | character varying(128) |           |          | 
+ price  | numeric(10,2)          |           |          | 
+Indexes:
+    "orders_pkey" PRIMARY KEY, btree (id)
+Referenced by:
+    TABLE "clients" CONSTRAINT "clients_order_id_fkey" FOREIGN KEY (order_id) REFERENCES orders(id)
+
+test_db=# \d clients
+                      Table "public.clients"
+  Column  |         Type          | Collation | Nullable | Default 
+----------+-----------------------+-----------+----------+---------
+ id       | integer               |           | not null | 
+ fio      | character varying(64) |           |          | 
+ country  | character varying(64) |           |          | 
+ order_id | integer               |           |          | 
+Indexes:
+    "clients_pkey" PRIMARY KEY, btree (id)
+Foreign-key constraints:
+    "clients_order_id_fkey" FOREIGN KEY (order_id) REFERENCES orders(id)
+
+test_db=# 
+```
+
+```
+test_db=# SELECT * FROM information_schema.table_privileges
+test_db-# WHERE table_catalog = 'test_db'
+test_db-#   AND table_schema = 'public'
+test_db-#   AND grantee != 'postgres';
+ grantor  |     grantee      | table_catalog | table_schema | table_name | privilege_type
+ | is_grantable | with_hierarchy 
+----------+------------------+---------------+--------------+------------+---------------
+-+--------------+----------------
+ postgres | test-admin-user  | test_db       | public       | orders     | INSERT        
+ | NO           | NO
+ postgres | test-admin-user  | test_db       | public       | orders     | SELECT        
+ | NO           | YES
+ postgres | test-admin-user  | test_db       | public       | orders     | UPDATE        
+ | NO           | NO
+ postgres | test-admin-user  | test_db       | public       | orders     | DELETE        
+ | NO           | NO
+ postgres | test-admin-user  | test_db       | public       | orders     | TRUNCATE      
+ | NO           | NO
+ postgres | test-admin-user  | test_db       | public       | orders     | REFERENCES    
+ | NO           | NO
+ postgres | test-admin-user  | test_db       | public       | orders     | TRIGGER       
+ | NO           | NO
+ postgres | test-simple-user | test_db       | public       | orders     | INSERT        
+ | NO           | NO
+ postgres | test-simple-user | test_db       | public       | orders     | SELECT        
+ | NO           | YES
+ postgres | test-simple-user | test_db       | public       | orders     | UPDATE        
+ | NO           | NO
+ postgres | test-simple-user | test_db       | public       | orders     | DELETE        
+ | NO           | NO
+ postgres | test-admin-user  | test_db       | public       | clients    | INSERT        
+ | NO           | NO
+ postgres | test-admin-user  | test_db       | public       | clients    | SELECT        
+ | NO           | YES
+ postgres | test-admin-user  | test_db       | public       | clients    | UPDATE        
+ | NO           | NO
+ postgres | test-admin-user  | test_db       | public       | clients    | DELETE        
+ | NO           | NO
+ postgres | test-admin-user  | test_db       | public       | clients    | TRUNCATE      
+ | NO           | NO
+ postgres | test-admin-user  | test_db       | public       | clients    | REFERENCES    
+ | NO           | NO
+ postgres | test-admin-user  | test_db       | public       | clients    | TRIGGER       
+ | NO           | NO
+ postgres | test-simple-user | test_db       | public       | clients    | INSERT        
+ | NO           | NO
+ postgres | test-simple-user | test_db       | public       | clients    | SELECT        
+ | NO           | YES
+ postgres | test-simple-user | test_db       | public       | clients    | UPDATE        
+ | NO           | NO
+ postgres | test-simple-user | test_db       | public       | clients    | DELETE        
+ | NO           | NO
+(22 rows)
+```
+
+
 
 ## Задача 3
 
