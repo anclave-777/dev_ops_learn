@@ -74,39 +74,40 @@ postgres=# CREATE DATABASE test_db;
 
 
 ```
-postgres=# CREATE TABLE orders (
-postgres(#     id integer PRIMARY KEY,
-postgres(#     name varchar(128),
-postgres(#     price numeric(10,2)
-postgres(# );
+test_db=# CREATE TABLE orders (
+test_db(#     id integer PRIMARY KEY,
+test_db(#     name varchar(128),
+test_db(#     price numeric(10,2)
+test_db(# );
 
 CREATE TABLE clients (
 CREATE TABLE
-postgres=# 
-postgres=# CREATE TABLE clients (
-postgres(#     id integer PRIMARY KEY,
-postgres(#     fio varchar(64),
-postgres(#     country varchar(64),
-postgres(#     order_id integer default null,
-postgres(#     FOREIGN KEY (order_id) REFERENCES orders (id)
-postgres(# );
+test_db=# 
+test_db=# CREATE TABLE clients (
+test_db(#     id integer PRIMARY KEY,
+test_db(#     fio varchar(64),
+test_db(#     country varchar(64),
+test_db(#     order_id integer default null,
+test_db(#     FOREIGN KEY (order_id) REFERENCES orders (id)
+test_db(# );
 CREATE TABLE
+
 ```
 
 
 ```
-postgres=# GRANT ALL PRIVILEGES ON orders TO "test-admin-user";
+test_db=# GRANT ALL PRIVILEGES ON orders TO "test-admin-user";
 GRANT
-postgres=# GRANT ALL PRIVILEGES ON clients TO "test-admin-user";
+test_db=# GRANT ALL PRIVILEGES ON clients TO "test-admin-user";
 GRANT
 ```
 
 ```
-postgres=# CREATE USER "test-simple-user" WITH PASSWORD 'test-simple-user';
+test_db=# CREATE USER "test-simple-user" WITH PASSWORD 'test-simple-user';
 CREATE ROLE
-postgres=# GRANT SELECT, INSERT, UPDATE, DELETE ON orders TO "test-simple-user";
+test_db=# GRANT SELECT, INSERT, UPDATE, DELETE ON orders TO "test-simple-user";
 GRANT
-postgres=# GRANT SELECT, INSERT, UPDATE, DELETE ON clients TO "test-simple-user";
+test_db=# GRANT SELECT, INSERT, UPDATE, DELETE ON clients TO "test-simple-user";
 ```
 
 
@@ -137,8 +138,6 @@ test_db=#
 ```
 
 ```
-test_db=# GRANT SELECT, INSERT, UPDATE, DELETE ON clients TO "test-simple-user";
-GRANT
 test_db=# \d orders
                       Table "public.orders"
  Column |          Type          | Collation | Nullable | Default 
