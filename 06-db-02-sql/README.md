@@ -16,6 +16,18 @@
 
 В БД из задачи 1: 
 - создайте пользователя test-admin-user и БД test_db
+
+'''
+
+root@69771499ab07:/# psql --u postgres
+psql (12.10 (Debian 12.10-1.pgdg110+1))
+Type "help" for help.
+
+postgres=# CREATE USER "test-admin-user" WITH PASSWORD 'test-admin-user';
+CREATE ROLE
+postgres=# CREATE DATABASE test_db;
+
+'''
 - в БД test_db создайте таблицу orders и clients (спeцификация таблиц ниже)
 - предоставьте привилегии на все операции пользователю test-admin-user на таблицы БД test_db
 - создайте пользователя test-simple-user  
