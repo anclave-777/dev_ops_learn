@@ -254,6 +254,57 @@ test_db-#   AND grantee != 'postgres';
     - запросы 
     - результаты их выполнения.
 
+Ответ:
+
+```
+root@69771499ab07:/# psql --u postgres 
+psql (12.10 (Debian 12.10-1.pgdg110+1))
+Type "help" for help.
+
+postgres=# \c test_db
+You are now connected to database "test_db" as user "postgres".
+test_db=# \d+
+                      List of relations
+ Schema |  Name   | Type  |  Owner   |  Size   | Description 
+--------+---------+-------+----------+---------+-------------
+ public | clients | table | postgres | 0 bytes | 
+ public | orders  | table | postgres | 0 bytes | 
+(2 rows)
+
+test_db=# INSERT INTO orders (id, name, price) VALUES
+test_db-# (1, 'Шоколад', 10),
+test_db-# (2, 'Принтер', 3000),
+test_db-# (3, 'Книга', 500),
+test_db-# (4, 'Монитор', 7000),
+test_db-# (5, 'Гитара', 4000);
+INSERT 0 5
+test_db=# 
+test_db=# INSERT INTO clients (id, fio, country) VALUES
+test_db-# (1, 'Иванов Иван Иванович', 'USA'),
+test_db-# (2, 'Петров Петр Петрович', 'Canada'),
+test_db-# (3, 'Иоганн Себастьян Бах', 'Japan'),
+test_db-# (4, 'Ронни Джеймс Дио', 'Russia'),
+test_db-# (5, 'Ritchie Blackmore', 'Russia');
+INSERT 0 5
+```
+
+```
+test_db=# SELECT COUNT(*) FROM orders;
+ count 
+-------
+     5
+(1 row)
+
+test_db=# SELECT COUNT(*) FROM clients;
+ count 
+-------
+     5
+(1 row)
+
+test_db=# 
+```
+
+
 ## Задача 4
 
 Часть пользователей из таблицы clients решили оформить заказы из таблицы orders.
