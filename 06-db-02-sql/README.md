@@ -323,6 +323,32 @@ test_db=#
  
 Подсказк - используйте директиву `UPDATE`.
 
+
+Ответ:
+
+```
+test_db=# UPDATE clients SET order_id = 3 WHERE id = 1;
+UPDATE 1
+test_db=# UPDATE clients SET order_id = 4 WHERE id = 2;
+UPDATE 1
+test_db=# UPDATE clients SET order_id = 5 WHERE id = 3;
+UPDATE 1
+test_db=# 
+test_db=# 
+test_db=# 
+test_db=# SELECT clients.fio, orders.name
+test_db-# FROM clients
+test_db-# LEFT JOIN orders ON clients.order_id = orders.id
+test_db-# WHERE orders.id IS NOT NULL;
+         fio          |  name   
+----------------------+---------
+ Иванов Иван Иванович | Книга
+ Петров Петр Петрович | Монитор
+ Иоганн Себастьян Бах | Гитара
+(3 rows)
+```
+
+
 ## Задача 5
 
 Получите полную информацию по выполнению запроса выдачи всех пользователей из задачи 4 
@@ -330,15 +356,86 @@ test_db=#
 
 Приведите получившийся результат и объясните что значат полученные значения.
 
+Ответ:
+
+```
+test_db=# EXPLAIN SELECT clients.fio, orders.name
+FROM clients
+LEFT JOIN orders ON clients.order_id = orders.id
+WHERE orders.id IS NOT NULL;
+                              QUERY PLAN                               
+-----------------------------------------------------------------------
+ Hash Join  (cost=15.61..28.65 rows=239 width=420)
+   Hash Cond: (clients.order_id = orders.id)
+   ->  Seq Scan on clients  (cost=0.00..12.40 rows=240 width=150)
+   ->  Hash  (cost=12.50..12.50 rows=249 width=278)
+         ->  Seq Scan on orders  (cost=0.00..12.50 rows=249 width=278)
+               Filter: (id IS NOT NULL)
+(6 rows)
+
+test_db=# 
+```
+cost=15.61..28.65 Первое значение(15.61) примерная стоимость запуска. Время, которое необходимо, прежде чем начнётся вывод данных. Второе значение(28.65) общее время, вычисляется при условии вывода всех данных;
+
+rows=239 - количество строк, которое должно вывестись; width=420 - средний размер строк для вывода
+
 ## Задача 6
 
 Создайте бэкап БД test_db и поместите его в volume, предназначенный для бэкапов (см. Задачу 1).
 
+```
+docker exec -t dockerfiles_pgdb_1_1 pg_dump -U postgres test_db -f /var/lib/postgresql/backups/backup_test.sql
+```
+
 Остановите контейнер с PostgreSQL (но не удаляйте volumes).
+
+
+```
+docker stop dockerfiles_pgdb_1_1
+```
 
 Поднимите новый пустой контейнер с PostgreSQL.
 
+```
+version: "3.1"
+
+services:
+  pgdb_2:
+    image: postgres:12
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secret
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - "/var/snap/docker/common/var-lib-docker/volumes/pgsql/_data:/var/lib/postgresql/data"
+      - "/var/snap/docker/common/var-lib-docker/volumes/pgsql_backup/_data:/var/lib/postgresql/backups"
+    ports:
+      - "5432:5432"
+```
+
+
 Восстановите БД test_db в новом контейнере.
+
+```
+Сначала создаем БД и пользователя:
+postgres=# \list
+                                 List of databases
+   Name    |  Owner   | Encoding |  Collate   |   Ctype    |   Access privileges
+-----------+----------+----------+------------+------------+-----------------------
+ postgres  | postgres | UTF8     | en_US.utf8 | en_US.utf8 |
+ template0 | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +
+           |          |          |            |            | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +
+           |          |          |            |            | postgres=CTc/postgres
+(3 rows)
+
+postgres=# CREATE USER "test-admin-user" WITH PASSWORD 'test-admin-user';
+postgres=# CREATE DATABASE test_db;
+postgres=# \c test_db;
+
+docker exec -i psql-1-add psql -U postgres -d test_db -f /var/lib/postgresql/backups/backup_test.sql
+```
 
 Приведите список операций, который вы применяли для бэкапа данных и восстановления. 
 
