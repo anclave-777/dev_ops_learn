@@ -9,18 +9,166 @@
 
 Используя docker поднимите инстанс MySQL (версию 8). Данные БД сохраните в volume.
 
+
+```
+version: "3.1"
+  
+services:
+  mysqldb:
+    container_name: mysql-1
+    image: mysql:8
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysql
+    volumes:
+      - "/home/docker/mysql/data:/var/lib/mysql/"
+      - "/home/docker/mysql/backups:/var/lib/backups/"
+    ports:
+      - "3306:3306"
+    command: mysqld --default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci
+```
+
 Изучите [бэкап БД](https://github.com/netology-code/virt-homeworks/tree/master/06-db-03-mysql/test_data) и 
 восстановитесь из него.
 
+```
+less /home/vagrant/devops_learn/06-db-03-mysql/test_data/test_dump.sql 
+-- MySQL dump 10.13  Distrib 8.0.21, for Linux (x86_64)
+--
+-- Host: localhost    Database: test_db
+-- ------------------------------------------------------
+-- Server version       8.0.21
+```
+
+```
+root@vagrant:/home/vagrant# docker exec -it mysql-1 mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.28 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database test_db;
+Query OK, 1 row affected (0.04 sec)
+```
+
+```
+root@706c3c836130:/var/lib/backups# ls
+test_dump.sql
+root@706c3c836130:/var/lib/backups# mysql -u root -p test_db < /var/lib/backups/test_dump.sql
+Enter password: 
+root@706c3c836130:/var/lib/backups# 
+```
+
 Перейдите в управляющую консоль `mysql` внутри контейнера.
+
+```
+root@vagrant:/home/vagrant# docker exec -it mysql-1 mysql -u root -p
+```
 
 Используя команду `\h` получите список управляющих команд.
 
+```
+mysql> \h
+
+For information about MySQL products and services, visit:
+   http://www.mysql.com/
+For developer information, including the MySQL Reference Manual, visit:
+   http://dev.mysql.com/
+To buy MySQL Enterprise support, training, or other products, visit:
+   https://shop.mysql.com/
+
+List of all MySQL commands:
+Note that all text commands must be first on line and end with ';'
+?         (\?) Synonym for `help'.
+clear     (\c) Clear the current input statement.
+connect   (\r) Reconnect to the server. Optional arguments are db and host.
+delimiter (\d) Set statement delimiter.
+edit      (\e) Edit command with $EDITOR.
+ego       (\G) Send command to mysql server, display result vertically.
+exit      (\q) Exit mysql. Same as quit.
+go        (\g) Send command to mysql server.
+help      (\h) Display this help.
+nopager   (\n) Disable pager, print to stdout.
+notee     (\t) Don't write into outfile.
+pager     (\P) Set PAGER [to_pager]. Print the query results via PAGER.
+print     (\p) Print current command.
+prompt    (\R) Change your mysql prompt.
+quit      (\q) Quit mysql.
+rehash    (\#) Rebuild completion hash.
+source    (\.) Execute an SQL script file. Takes a file name as an argument.
+status    (\s) Get status information from the server. - Нужная команда
+```
+
 Найдите команду для выдачи статуса БД и **приведите в ответе** из ее вывода версию сервера БД.
+
+```
+mysql> \s
+--------------
+mysql  Ver 8.0.28 for Linux on x86_64 (MySQL Community Server - GPL)
+
+Connection id:          8
+Current database:
+Current user:           root@localhost
+SSL:                    Not in use
+Current pager:          stdout
+Using outfile:          ''
+Using delimiter:        ;
+Server version:         8.0.28 MySQL Community Server - GPL
+Protocol version:       10
+Connection:             Localhost via UNIX socket
+Server characterset:    utf8mb3
+Db     characterset:    utf8mb3
+Client characterset:    latin1
+Conn.  characterset:    latin1
+UNIX socket:            /var/run/mysqld/mysqld.sock
+Binary data as:         Hexadecimal
+Uptime:                 10 min 12 sec
+
+
+Threads: 2  Questions: 36  Slow queries: 0  Opens: 137  Flush tables: 3  Open tables: 55  Queries per second avg: 0.058
+```
 
 Подключитесь к восстановленной БД и получите список таблиц из этой БД.
 
+```
+mysql> use test_db;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++-------------------+
+| Tables_in_test_db |
++-------------------+
+| orders            |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql> 
+
+```
+
 **Приведите в ответе** количество записей с `price` > 300.
+
+
+```
+mysql> SELECT COUNT(*) `cnt` FROM `orders` WHERE `price` > 300;
++-----+
+| cnt |
++-----+
+|   1 |
++-----+
+1 row in set (0.01 sec)
+```
+
 
 В следующих заданиях мы будем продолжать работу с данным контейнером.
 
