@@ -227,6 +227,43 @@ mysql>
 - на `MyISAM`
 - на `InnoDB`
 
+```
+mysql>  SET profiling = 1;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> SHOW PROFILES;
+Empty set, 1 warning (0.00 sec)
+
+mysql> SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES where TABLE_SCHEMA = 'test_db';
++------------+--------+
+| TABLE_NAME | ENGINE |
++------------+--------+
+| orders     | InnoDB |
++------------+--------+
+1 row in set (0.00 sec)
+
+mysql> ALTER TABLE orders ENGINE = MyISAM;
+Query OK, 5 rows affected (0.03 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql>  ALTER TABLE orders ENGINE = InnoDB;
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SHOW PROFILES;
++----------+------------+-----------------------------------------------------------------------------------------+
+| Query_ID | Duration   | Query                                                                                   |
++----------+------------+-----------------------------------------------------------------------------------------+
+|        1 | 0.00160075 | SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES where TABLE_SCHEMA = 'test_db' |
+|        2 | 0.03178100 | ALTER TABLE orders ENGINE = MyISAM                                                      |
+|        3 | 0.02203800 | ALTER TABLE orders ENGINE = InnoDB                                                      |
++----------+------------+-----------------------------------------------------------------------------------------+
+3 rows in set, 1 warning (0.00 sec)
+
+mysql> 
+
+```
+
 ## Задача 4 
 
 Изучите файл `my.cnf` в директории /etc/mysql.
