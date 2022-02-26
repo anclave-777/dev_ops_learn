@@ -176,11 +176,75 @@ test_database=#
 
 Можно ли было изначально исключить "ручное" разбиение при проектировании таблицы orders?
 
+```
+test_database=# BEGIN TRANSACTION;
+BEGIN
+test_database=*# CREATE TABLE public.orders_main (
+test_database(*#     id integer NOT NULL,
+test_database(*#     title character varying(80) NOT NULL,
+test_database(*#     price integer DEFAULT 0
+test_database(*# ) PARTITION BY RANGE(price);
+CREATE TABLE
+test_database=*# CREATE TABLE orders_1 PARTITION OF orders_main FOR VALUES FROM (500) TO (MAXVALUE);
+CREATE TABLE
+test_database=*# CREATE TABLE orders_2 PARTITION OF orders_main FOR VALUES FROM (MINVALUE) TO (500);
+CREATE TABLE
+test_database=*# INSERT INTO orders_main SELECT * FROM orders;
+INSERT 0 8
+test_database=*# COMMIT;
+COMMIT
+test_database=# SELECT * FROM orders_main;
+ id |        title         | price 
+----+----------------------+-------
+  1 | War and peace        |   100
+  3 | Adventure psql time  |   300
+  4 | Server gravity falls |   300
+  5 | Log gossips          |   123
+  7 | Me and my bash-pet   |   499
+  2 | My little database   |   500
+  6 | WAL never lies       |   900
+  8 | Dbiezdmin            |   501
+(8 rows)
+
+test_database=# SELECT * FROM orders_1;
+ id |       title        | price 
+----+--------------------+-------
+  2 | My little database |   500
+  6 | WAL never lies     |   900
+  8 | Dbiezdmin          |   501
+(3 rows)
+
+test_database=#  SELECT * FROM orders_2;
+ id |        title         | price 
+----+----------------------+-------
+  1 | War and peace        |   100
+  3 | Adventure psql time  |   300
+  4 | Server gravity falls |   300
+  5 | Log gossips          |   123
+  7 | Me and my bash-pet   |   499
+(5 rows)
+
+test_database=# 
+```
+
+```
+Ответ на вопрос из задания: Нельзя превратить обычную таблицу в таблицу с поддержкой разбиения.
+```
+
 ## Задача 4
 
 Используя утилиту `pg_dump` создайте бекап БД `test_database`.
 
 Как бы вы доработали бэкап-файл, чтобы добавить уникальность значения столбца `title` для таблиц `test_database`?
+
+```
+root@vagrant:/var/snap/docker/common/var-lib-docker/volumes/netology_pgbackups/_data# docker exec -t dockerfiles_pgdb_1_1 pg_dump -U postgres test_database -f /var/lib/postgresql/backups/test_database_2.sql
+root@vagrant:/var/snap/docker/common/var-lib-docker/volumes/netology_pgbackups/_data# 
+```
+
+```
+CREATE UNIQUE INDEX title_unique ON orders_main (title, price);
+```
 
 ---
 
