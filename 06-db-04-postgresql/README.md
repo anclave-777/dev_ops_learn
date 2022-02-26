@@ -6,6 +6,58 @@
 
 Подключитесь к БД PostgreSQL используя `psql`.
 
+
+```
+docker volume create --name=netology_pgdata
+
+docker volume create --name=netology_pgbackups
+```
+
+```
+
+version: "3.1"
+
+services:
+  pgdb_1:
+    image: postgres:13
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secret
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - pgdata:/var/lib/postgresql/data"
+      - pgbackups:/var/lib/postgresql/backups
+    ports:
+      - "5432:5432"
+
+volumes:
+  pgdata:
+    external: true
+    name: netology_pgdata
+  pgbackups:
+    external: true
+    name: netology_pgbackups
+    
+```
+
+
+```
+Status: Downloaded newer image for postgres:13
+Creating dockerfiles_pgdb_1_1 ... done
+root@vagrant:/home/vagrant/dockerfiles# docker ps
+CONTAINER ID   IMAGE         COMMAND                  CREATED              STATUS              PORTS                                                  NAMES
+05ad6cb90be3   postgres:13   "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:5432->5432/tcp, :::5432->5432/tcp              dockerfiles_pgdb_1_1
+```
+
+```
+root@vagrant:/home/vagrant/dockerfiles# docker exec -it  dockerfiles_pgdb_1_1 /bin/bash 
+root@05ad6cb90be3:/# psql -U postgres
+psql (13.6 (Debian 13.6-1.pgdg110+1))
+Type "help" for help.
+
+```
+
 Воспользуйтесь командой `\?` для вывода подсказки по имеющимся в `psql` управляющим командам.
 
 **Найдите и приведите** управляющие команды для:
@@ -14,6 +66,18 @@
 - вывода списка таблиц
 - вывода описания содержимого таблиц
 - выхода из psql
+
+```
+\l[+]   [PATTERN]      list databases
+
+\c[onnect] {[DBNAME|- USER|- HOST|- PORT|-] | conninfo}
+
+\d[S+]                 list tables, views, and sequences
+
+\d[S+]  NAME           describe table, view, sequence, or index
+
+\q                     quit psql
+```
 
 ## Задача 2
 
