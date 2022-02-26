@@ -83,16 +83,86 @@ Type "help" for help.
 
 Используя `psql` создайте БД `test_database`.
 
+```
+postgres=# CREATE DATABASE test_database;
+CREATE DATABASE
+```
+
 Изучите [бэкап БД](https://github.com/netology-code/virt-homeworks/tree/master/06-db-04-postgresql/test_data).
 
 Восстановите бэкап БД в `test_database`.
+
+```
+root@05ad6cb90be3:/var/lib/postgresql/backups# ls
+test_dump.sql
+root@05ad6cb90be3:/var/lib/postgresql/backups# psql -U postgres -d test_database -f /var/lib/postgresql/backups/test_dump.sql
+SET
+SET
+SET
+SET
+SET
+ set_config 
+------------
+ 
+(1 row)
+
+SET
+SET
+SET
+SET
+SET
+SET
+CREATE TABLE
+ALTER TABLE
+CREATE SEQUENCE
+ALTER TABLE
+ALTER SEQUENCE
+ALTER TABLE
+COPY 8
+ setval 
+--------
+      8
+(1 row)
+
+ALTER TABLE
+```
 
 Перейдите в управляющую консоль `psql` внутри контейнера.
 
 Подключитесь к восстановленной БД и проведите операцию ANALYZE для сбора статистики по таблице.
 
+```
+root@05ad6cb90be3:/var/lib/postgresql/backups# psql -U postgres
+psql (13.6 (Debian 13.6-1.pgdg110+1))
+Type "help" for help.
+
+postgres=# \c test_database;
+You are now connected to database "test_database" as user "postgres".
+test_database=# \dt
+         List of relations
+ Schema |  Name  | Type  |  Owner   
+--------+--------+-------+----------
+ public | orders | table | postgres
+(1 row)
+
+test_database=# ANALYZE orders;
+ANALYZE
+test_database=# 
+```
+
+
 Используя таблицу [pg_stats](https://postgrespro.ru/docs/postgresql/12/view-pg-stats), найдите столбец таблицы `orders` 
 с наибольшим средним значением размера элементов в байтах.
+
+```
+test_database=# SELECT MAX(avg_width) max_avg_width FROM pg_stats WHERE tablename = 'orders';
+ max_avg_width 
+---------------
+            16
+(1 row)
+
+test_database=# 
+```
 
 **Приведите в ответе** команду, которую вы использовали для вычисления и полученный результат.
 
