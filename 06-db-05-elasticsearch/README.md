@@ -168,11 +168,39 @@ cluster.initial_master_nodes: ["netology_test"]
 https://hub.docker.com/repository/docker/anclave777/test_elastic
 ```
 
-root@vagrant:/home/vagrant/dockerfiles# docker run -id --name elastic-2 -p 9200:9200 -p 9300:9300 anclave777/test_elastic:latest
-d2a1a47132eb62f8c8839d482d89e713b95f5401d11265a4300c965dff1c5806
+```
+
 root@vagrant:/home/vagrant/dockerfiles# docker ps
-CONTAINER ID   IMAGE                            COMMAND                  CREATED         STATUS         PORTS                                                                                  NAMES
-d2a1a47132eb   anclave777/test_elastic:latest   "./bin/elasticsearch…"   7 seconds ago   Up 6 seconds   0.0.0.0:9200->9200/tcp, :::9200->9200/tcp, 0.0.0.0:9300->9300/tcp, :::9300->9300/tcp   elastic-2
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS                NAMES
+f6b60b9ed9f2   7dea3ead567d   "./bin/elasticsearch…"   3 seconds ago   Up 2 seconds   9200/tcp, 9300/tcp   elastic-27d4421u4r3j77
+root@vagrant:/home/vagrant/dockerfiles# docker exec -it f6b60b9ed9f2   /bin/bash 
+
+root@vagrant:/home/vagrant/dockerfiles# docker run -id --name elastic-27d4421u4r3j77  anclave777/test_elastic:latest
+f6b60b9ed9f24e15189d77862b2cb2054d37acc915fc5d50fd807724f95dded9
+
+
+[elasticuser@f6b60b9ed9f2 elasticsearch-7.13.4]$ curl -X GET localhost:9200
+{
+  "name" : "netology_test",
+  "cluster_name" : "netology_cluster",
+  "cluster_uuid" : "7IYGII-bSvmy15JCdqvCKw",
+  "version" : {
+    "number" : "7.13.4",
+    "build_flavor" : "default",
+    "build_type" : "tar",
+    "build_hash" : "c5f60e894ca0c61cdbae4f5a686d9f08bcefc942",
+    "build_date" : "2021-07-14T18:33:36.673943207Z",
+    "build_snapshot" : false,
+    "lucene_version" : "8.8.2",
+    "minimum_wire_compatibility_version" : "6.8.0",
+    "minimum_index_compatibility_version" : "6.0.0-beta1"
+  },
+  "tagline" : "You Know, for Search"
+}
+
+
+```
+
 
 ## Задача 2
 
