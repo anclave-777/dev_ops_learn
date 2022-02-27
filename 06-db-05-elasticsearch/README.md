@@ -31,6 +31,149 @@
 
 Далее мы будем работать с данным экземпляром elasticsearch.
 
+Ответ:
+
+текст Dockerfile манифеста:
+
+```
+FROM centos:7
+
+ADD https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.13.4-linux-x86_64.tar.gz /
+ADD https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.13.4-linux-x86_64.tar.gz.sha512 /
+
+RUN yum update -y && \
+  yum install perl-Digest-SHA -y && \
+  shasum -a 512 -c elasticsearch-7.13.4-linux-x86_64.tar.gz.sha512 && \
+  tar -xzf elasticsearch-7.13.4-linux-x86_64.tar.gz && \
+  cd elasticsearch-7.13.4/ && \
+  useradd elasticuser && \
+  chown -R elasticuser:elasticuser /elasticsearch-7.13.4/ && \
+  rm -rf /elasticsearch-7.13.4-linux-x86_64.tar.gz.sha512 /elasticsearch-7.13.4-linux-x86_64.tar.gz
+
+RUN mkdir /var/lib/{data,logs} && \
+  chown -R elasticuser:elasticuser /var/lib/data && \
+  chown -R elasticuser:elasticuser /var/lib/logs
+
+WORKDIR /elasticsearch-7.13.4
+
+RUN mkdir snapshots && \
+  chown -R elasticuser:elasticuser snapshots
+
+COPY elasticsearch.yml /elasticsearch-7.13.4/config/
+
+RUN chown -R elasticuser:elasticuser /elasticsearch-7.13.4/config
+
+USER elasticuser
+
+EXPOSE 9200 9300
+
+CMD ["./bin/elasticsearch", "-Ecluster.name=netology_cluster", "-Enode.name=netology_test"]
+```
+
+Конф файл эластика:
+
+```
+root@vagrant:/home/vagrant/dockerfiles# cat elasticsearch.yml 
+# ======================== Elasticsearch Configuration =========================
+#
+# NOTE: Elasticsearch comes with reasonable defaults for most settings.
+#       Before you set out to tweak and tune the configuration, make sure you
+#       understand what are you trying to accomplish and the consequences.
+#
+# The primary way of configuring a node is via this file. This template lists
+# the most important settings you may want to configure for a production cluster.
+#
+# Please consult the documentation for further information on configuration options:
+# https://www.elastic.co/guide/en/elasticsearch/reference/index.html
+#
+# ---------------------------------- Cluster -----------------------------------
+#
+# Use a descriptive name for your cluster:
+#
+#cluster.name: my-application
+#
+# ------------------------------------ Node ------------------------------------
+#
+# Use a descriptive name for the node:
+#
+#node.name: node-1
+#
+# Add custom attributes to the node:
+#
+#node.attr.rack: r1
+#
+# ----------------------------------- Paths ------------------------------------
+#
+# Path to directory where to store the data (separate multiple locations by comma):
+#
+path.data: /var/lib/data
+#
+# Path to log files:
+#
+path.logs: /var/lib/logs
+#
+# Path to backups
+#
+path.repo: /elasticsearch-7.13.4/snapshots
+#
+# ----------------------------------- Memory -----------------------------------
+#
+# Lock the memory on startup:
+#
+#bootstrap.memory_lock: true
+#
+# Make sure that the heap size is set to about half the memory available
+# on the system and that the owner of the process is allowed to use this
+# limit.
+#
+# Elasticsearch performs poorly when the system is swapping the memory.
+#
+# ---------------------------------- Network -----------------------------------
+#
+# By default Elasticsearch is only accessible on localhost. Set a different
+# address here to expose this node on the network:
+#
+network.host: 0.0.0.0
+#
+# By default Elasticsearch listens for HTTP traffic on the first free port it
+# finds starting at 9200. Set a specific HTTP port here:
+#
+#http.port: 9200
+#
+# For more information, consult the network module documentation.
+#
+# --------------------------------- Discovery ----------------------------------
+#
+# Pass an initial list of hosts to perform discovery when this node is started:
+# The default list of hosts is ["127.0.0.1", "[::1]"]
+#
+discovery.seed_hosts: ["127.0.0.1", "[::1]"]
+#
+# Bootstrap the cluster using an initial set of master-eligible nodes:
+#
+#cluster.initial_master_nodes: ["node-1", "node-2"]
+cluster.initial_master_nodes: ["netology_test"]
+#
+# For more information, consult the discovery and cluster formation module documentation.
+#
+# ---------------------------------- Various -----------------------------------
+#
+# Require explicit names when deleting indices:
+#
+#action.destructive_requires_name: true
+```
+
+- ссылку на образ в репозитории dockerhub
+```
+https://hub.docker.com/repository/docker/anclave777/test_elastic
+```
+
+root@vagrant:/home/vagrant/dockerfiles# docker run -id --name elastic-2 -p 9200:9200 -p 9300:9300 anclave777/test_elastic:latest
+d2a1a47132eb62f8c8839d482d89e713b95f5401d11265a4300c965dff1c5806
+root@vagrant:/home/vagrant/dockerfiles# docker ps
+CONTAINER ID   IMAGE                            COMMAND                  CREATED         STATUS         PORTS                                                                                  NAMES
+d2a1a47132eb   anclave777/test_elastic:latest   "./bin/elasticsearch…"   7 seconds ago   Up 6 seconds   0.0.0.0:9200->9200/tcp, :::9200->9200/tcp, 0.0.0.0:9300->9300/tcp, :::9300->9300/tcp   elastic-2
+
 ## Задача 2
 
 В этом задании вы научитесь:
