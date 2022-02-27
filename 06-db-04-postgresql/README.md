@@ -246,6 +246,18 @@ root@vagrant:/var/snap/docker/common/var-lib-docker/volumes/netology_pgbackups/_
 CREATE UNIQUE INDEX title_unique ON orders_main (title, price);
 ```
 
+## Доработка
+
+Альтернатива из документации на https://www.postgresql.org/
+Note: The preferred way to add a unique constraint to a table is ALTER TABLE ... ADD CONSTRAINT. The use of indexes to enforce unique constraints could be considered an implementation detail that should not be accessed directly. One should, however, be aware that there's no need to manually create indexes on unique columns; doing so would just duplicate the automatically-created index.
+
+```
+ALTER TABLE orders_main
+ADD CONSTRAINT title_unique  UNIQUE (title);
+```
+
+В этом примере мы создали уникальное ограничение для существующей таблицы orders_main с именем title_unique . Он состоит из поля с именем order_id.
+
 ---
 
 ### Как cдавать задание
