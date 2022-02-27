@@ -168,22 +168,34 @@ cluster.initial_master_nodes: ["netology_test"]
 https://hub.docker.com/repository/docker/anclave777/test_elastic
 ```
 
+
+- ответ `elasticsearch` на запрос пути `/` в json виде
+
 ```
 
+root@vagrant:/home/vagrant/dockerfiles# docker push  anclave777/test_elastic:latest
+The push refers to repository [docker.io/anclave777/test_elastic]
+b5e3a884bae5: Pushed 
+a017af42b022: Pushed 
+dfd00e344fa4: Pushed 
+d56603f0b4dd: Pushed 
+e7542514d3cb: Pushed 
+c6d0e7b12329: Layer already exists 
+22a9e71a628d: Layer already exists 
+174f56854903: Layer already exists 
+latest: digest: sha256:7cbc7ffd91de788ab4e58e869eaec90bfc4f213a5256b576f8c32fb8ab825a31 size: 1992
 root@vagrant:/home/vagrant/dockerfiles# docker ps
-CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS                NAMES
-f6b60b9ed9f2   7dea3ead567d   "./bin/elasticsearch…"   3 seconds ago   Up 2 seconds   9200/tcp, 9300/tcp   elastic-27d4421u4r3j77
-root@vagrant:/home/vagrant/dockerfiles# docker exec -it f6b60b9ed9f2   /bin/bash 
-
-root@vagrant:/home/vagrant/dockerfiles# docker run -id --name elastic-27d4421u4r3j77  anclave777/test_elastic:latest
-f6b60b9ed9f24e15189d77862b2cb2054d37acc915fc5d50fd807724f95dded9
-
-
-[elasticuser@f6b60b9ed9f2 elasticsearch-7.13.4]$ curl -X GET localhost:9200
+CONTAINER ID   IMAGE                            COMMAND                  CREATED         STATUS         PORTS                NAMES
+0ddbad6ca1ae   anclave777/test_elastic:latest   "./bin/elasticsearch…"   7 seconds ago   Up 6 seconds   9200/tcp, 9300/tcp   elastic-27
+root@vagrant:/home/vagrant/dockerfiles# docker exec -it 0ddbad6ca1ae /bin/bash
+[elasticser@0ddbad6ca1ae elasticsearch-7.13.4]$ curl -X localhost:9200
+curl: no URL specified!
+curl: try 'curl --help' or 'curl --manual' for more information
+[elasticuser@0ddbad6ca1ae elasticsearch-7.13.4]$ curl -X GET localhost:9200
 {
   "name" : "netology_test",
   "cluster_name" : "netology_cluster",
-  "cluster_uuid" : "7IYGII-bSvmy15JCdqvCKw",
+  "cluster_uuid" : "nfiMQOU4RR6TEf097UfH-Q",
   "version" : {
     "number" : "7.13.4",
     "build_flavor" : "default",
@@ -197,7 +209,7 @@ f6b60b9ed9f24e15189d77862b2cb2054d37acc915fc5d50fd807724f95dded9
   },
   "tagline" : "You Know, for Search"
 }
-
+[elasticuser@0ddbad6ca1ae elasticsearch-7.13.4]$ 
 
 ```
 
