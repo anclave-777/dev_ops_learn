@@ -243,6 +243,92 @@ curl: try 'curl --help' or 'curl --manual' for more information
 При проектировании кластера elasticsearch нужно корректно рассчитывать количество реплик и шард,
 иначе возможна потеря данных индексов, вплоть до полной, при деградации системы.
 
+**Ответ**
+
+Добавляем:
+
+```
+curl -X PUT "localhost:9200/ind-1" -H 'Content-Type: application/json' -d'
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,  
+      "number_of_replicas": 0 
+    }
+  }
+}
+'
+
+curl -X PUT "localhost:9200/ind-2" -H 'Content-Type: application/json' -d'
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 2,  
+      "number_of_replicas": 1 
+    }
+  }
+}
+'
+
+curl -X PUT "localhost:9200/ind-3" -H 'Content-Type: application/json' -d'
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 4,  
+      "number_of_replicas": 2 
+    }
+  }
+}
+'
+```
+
+Список индексов:
+
+```
+[elasticuser@0ddbad6ca1ae elasticsearch-7.13.4]$ curl -X GET "localhost:9200/_cat/indices?v"
+health status index uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   ind-1 un4BxryuTPSngYnsxs0gRw   1   0          0            0       208b           208b
+yellow open   ind-3 GtiXl8hQSgWe1_4DfpvLBg   4   2          0            0       832b           832b
+yellow open   ind-2 fQ-ZnEMBQFWRpWvplRfe0A   2   1          0            0       416b           416b
+```
+
+Состояние кластера через апи:
+
+```
+[elasticuser@0ddbad6ca1ae elasticsearch-7.13.4]$ curl -X GET "localhost:9200/_cluster/health?pretty"
+{
+  "cluster_name" : "netology_cluster",
+  "status" : "yellow",
+  "timed_out" : false,
+  "number_of_nodes" : 1,
+  "number_of_data_nodes" : 1,
+  "active_primary_shards" : 7,
+  "active_shards" : 7,
+  "relocating_shards" : 0,
+  "initializing_shards" : 0,
+  "unassigned_shards" : 10,
+  "delayed_unassigned_shards" : 0,
+  "number_of_pending_tasks" : 0,
+  "number_of_in_flight_fetch" : 0,
+  "task_max_waiting_in_queue_millis" : 0,
+  "active_shards_percent_as_number" : 41.17647058823529
+}
+```
+
+Как вы думаете, почему часть индексов и кластер находится в состоянии yellow?:
+
+```
+Состояние Yellow говорит о том, что у индексов ind-2 и ind-3 данные должны быть реплицированы на
+другие узелы, ведь указаны реплики больше 0
+```
+
+Удаляем индексы
+
+```
+[elasticuser@0ddbad6ca1ae elasticsearch-7.13.4]$ curl -X DELETE "localhost:9200/_all"
+{"acknowledged":true}[elasticuser@0ddbad6ca1ae elasticsearch-7.13.4]$ 
+```
+
 ## Задача 3
 
 В данном задании вы научитесь:
