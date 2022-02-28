@@ -361,6 +361,84 @@ yellow open   ind-2 fQ-ZnEMBQFWRpWvplRfe0A   2   1          0            0      
 
 ---
 
+Ответ:
+
+```
+[elasticuser@0ddbad6ca1ae elasticsearch-7.13.4]$ curl -X PUT "localhost:9200/_snapshot/netology_backup" -H 'Content-Type: application/json' -d'
+> {
+>   "type": "fs",
+>   "settings": {
+>     "location": "/elasticsearch-7.13.4/snapshots"
+>   }
+> }
+> {
+>   "acknowledged" : true
+> }
+> 
+> '
+{"acknowledged":true}[elasticuser@0ddbad6ca1ae elasticsearch-7.13.4]$ 
+```
+
+```
+[elasticuser@0ddbad6ca1ae elasticsearch-7.13.4]$ curl -X GET "localhost:9200/_cat/indices?v"
+health status index uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   test  pbnsqJUxS1u3fgrkOEIQsg   1   0          0            0       208b           208b
+```
+
+
+```
+[elasticuser@0ddbad6ca1ae elasticsearch-7.13.4]$ curl -X PUT "localhost:9200/_snapshot/netology_backup/snapshot_1?wait_for_completion=true&pretty"
+{
+  "snapshot" : {
+    "snapshot" : "snapshot_1",
+    "uuid" : "6dTVR7_GRYCFn51YEYij5w",
+    "version_id" : 7130499,
+    "version" : "7.13.4",
+    "indices" : [
+      "test"
+    ],
+    "data_streams" : [ ],
+    "include_global_state" : true,
+    "state" : "SUCCESS",
+    "start_time" : "2021-11-22T00:07:14.552Z",
+{
+  "snapshot" : {
+    "snapshot" : "snapshot_1",
+    "uuid" : "9oiSqm0qTim2f-bQ3sbG0g",
+    "version_id" : 7130499,
+    "version" : "7.13.4",
+    "indices" : [
+      "test"
+    ],
+    "data_streams" : [ ],
+    "include_global_state" : true,
+    "state" : "SUCCESS",
+    "start_time" : "2022-02-28T19:55:32.295Z",
+    "start_time_in_millis" : 1646078132295,
+    "end_time" : "2022-02-28T19:55:32.295Z",
+    "end_time_in_millis" : 1646078132295,
+    "duration_in_millis" : 0,
+    "failures" : [ ],
+    "shards" : {
+      "total" : 1,
+      "failed" : 0,
+      "successful" : 1
+    },
+    "feature_states" : [ ]
+  }
+}
+```
+
+```
+root@vagrant:/home/vagrant# docker ps
+CONTAINER ID   IMAGE                            COMMAND                  CREATED        STATUS        PORTS                NAMES
+0ddbad6ca1ae   anclave777/test_elastic:latest   "./bin/elasticsearch…"   22 hours ago   Up 22 hours   9200/tcp, 9300/tcp   elastic-27
+root@vagrant:/home/vagrant# docker exec -it elastic-27 ls /elasticsearch-7.13.4/snapshots       
+index-0       indices                          snap-9oiSqm0qTim2f-bQ3sbG0g.dat
+index.latest  meta-9oiSqm0qTim2f-bQ3sbG0g.dat
+root@vagrant:/home/vagrant# 
+```
+
 ### Как cдавать задание
 
 Выполненное домашнее задание пришлите ссылкой на .md-файл в вашем репозитории.
