@@ -361,7 +361,10 @@ yellow open   ind-2 fQ-ZnEMBQFWRpWvplRfe0A   2   1          0            0      
 
 ---
 
+
 Ответ:
+
+Приведите в ответе запрос API и результат вызова API для создания репозитория.
 
 ```
 [elasticuser@0ddbad6ca1ae elasticsearch-7.13.4]$ curl -X PUT "localhost:9200/_snapshot/netology_backup" -H 'Content-Type: application/json' -d'
@@ -379,11 +382,17 @@ yellow open   ind-2 fQ-ZnEMBQFWRpWvplRfe0A   2   1          0            0      
 {"acknowledged":true}[elasticuser@0ddbad6ca1ae elasticsearch-7.13.4]$ 
 ```
 
+
+Создайте индекс `test` с 0 реплик и 1 шардом и **приведите в ответе** список индексов.
+
+
 ```
 [elasticuser@0ddbad6ca1ae elasticsearch-7.13.4]$ curl -X GET "localhost:9200/_cat/indices?v"
 health status index uuid                   pri rep docs.count docs.deleted store.size pri.store.size
 green  open   test  pbnsqJUxS1u3fgrkOEIQsg   1   0          0            0       208b           208b
 ```
+
+**Приведите в ответе** список файлов в директории со `snapshot`ами.
 
 
 ```
@@ -429,6 +438,10 @@ green  open   test  pbnsqJUxS1u3fgrkOEIQsg   1   0          0            0      
 }
 ```
 
+
+**Приведите в ответе** список файлов в директории со `snapshot`ами.
+
+
 ```
 root@vagrant:/home/vagrant# docker ps
 CONTAINER ID   IMAGE                            COMMAND                  CREATED        STATUS        PORTS                NAMES
@@ -438,6 +451,53 @@ index-0       indices                          snap-9oiSqm0qTim2f-bQ3sbG0g.dat
 index.latest  meta-9oiSqm0qTim2f-bQ3sbG0g.dat
 root@vagrant:/home/vagrant# 
 ```
+
+
+
+Удалите индекс `test` и создайте индекс `test-2`. **Приведите в ответе** список индексов.
+
+
+```
+[elasticuser@0ddbad6ca1ae elasticsearch-7.13.4]$curl -X DELETE "localhost:9200/test"
+{"acknowledged":true}
+
+[elasticuser@0ddbad6ca1ae elasticsearch-7.13.4]$curl -X PUT "localhost:9200/test-2?pretty" -H 'Content-Type: application/json' -d'
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,  
+      "number_of_replicas": 0 
+    }
+  }
+}
+'
+{
+  "acknowledged" : true,
+  "shards_acknowledged" : true,
+  "index" : "test-2"
+}
+
+[elasticuser@0ddbad6ca1ae elasticsearch-7.13.4]$curl -X GET "localhost:9200/_cat/indices?v"
+health status index  uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   test-2 3h9iC93NTXqYQIGhgPvWkw   1   0          0            0       208b           208b
+```
+
+**Приведите в ответе** запрос к API восстановления и итоговый список индексов.
+
+```
+[elasticuser@0ddbad6ca1ae elasticsearch-7.13.4]$curl -X POST "localhost:9200/_snapshot/netology_backup/snapshot_1/_restore?pretty"
+{
+  "accepted" : true
+}
+
+curl -X GET "localhost:9200/_cat/indices?v"
+health status index  uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   test-2 3h9iC93NTXqYQIGhgPvWkw   1   0          0            0       208b           208b
+green  open   test   JmT0WCeGRB2OskyiD1PHAw   1   0          0            0       208b           208b
+
+```
+
+
 
 ### Как cдавать задание
 
