@@ -118,6 +118,7 @@ is 1.1.7. You can update by downloading from https://www.terraform.io/downloads.
 
 Я скачал бинарный файл с https://www.terraform.io/downloads версии 1.1.7 и распаковал его на виртуальной машине, после перенес его в одну из переменных окружения и дал права на исполнение:
 
+```
 root@vagrant:/home/vagrant/terraform_new/terraform_1.1.7_linux_amd64# echo $PATH
 /root/yandex-cloud/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 root@vagrant:/home/vagrant/terraform_new/terraform_1.1.7_linux_amd64# cd /usr/local/bin/
@@ -130,7 +131,7 @@ root@vagrant:/usr/local/bin# chmod 777 terafform_1.1.7
 root@vagrant:/usr/local/bin# ./terafform_1.1.7 -version
 Terraform v1.1.7
 on linux_amd64
-
+```
 
 
 ---
