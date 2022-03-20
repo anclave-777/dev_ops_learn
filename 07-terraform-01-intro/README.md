@@ -103,6 +103,35 @@ is 1.1.7. You can update by downloading from https://www.terraform.io/downloads.
 или виртуальной машине.
 
 
+Ответ:
+
+Поскольку Терраформ на моей виртуалке уже установлен:
+
+```
+root@vagrant:/home/vagrant# terraform --version
+Terraform v1.1.4
+on linux_amd64
+
+Your version of Terraform is out of date! The latest version
+is 1.1.7. You can update by downloading from https://www.terraform.io/downloads.html
+```
+
+Я скачал бинарный файл с https://www.terraform.io/downloads версии 1.1.7 и распаковал его на виртуальной машине, после перенес его в одну из переменных окружения и дал права на исполнение:
+
+root@vagrant:/home/vagrant/terraform_new/terraform_1.1.7_linux_amd64# echo $PATH
+/root/yandex-cloud/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+root@vagrant:/home/vagrant/terraform_new/terraform_1.1.7_linux_amd64# cd /usr/local/bin/
+root@vagrant:/usr/local/bin# ll
+total 123568
+drwxr-xr-x  2 root    root        4096 Mar 20 06:30 ./
+drwxr-xr-x 10 root    root        4096 Jul 28  2021 ../
+-rw-r--r--  1 root    root    63262720 Mar 20 06:28 terafform_1.1.7
+root@vagrant:/usr/local/bin# chmod 777 terafform_1.1.7 
+root@vagrant:/usr/local/bin# ./terafform_1.1.7 -version
+Terraform v1.1.7
+on linux_amd64
+
+
 
 ---
 
