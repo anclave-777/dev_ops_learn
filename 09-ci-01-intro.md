@@ -9,6 +9,9 @@
 
 https://anclave777.atlassian.net/
 
+![image](https://user-images.githubusercontent.com/44027303/160857604-828ddc53-5595-4c36-925e-5c971b1cc704.png)
+
+
 ## Основная часть
 В рамках основной части необходимо создать собственные workflow для двух типов задач: bug и остальные типы задач. Задачи типа bug должны проходить следующий жизненный цикл:
 1. Open -> On reproduce
