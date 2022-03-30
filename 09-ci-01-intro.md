@@ -31,6 +31,13 @@ https://anclave777.atlassian.net/
 
 Если всё отработало в рамках ожидания - выгрузить схемы workflow для импорта в XML. Файлы с workflow приложить к решению задания.
 
+
+![image](https://user-images.githubusercontent.com/44027303/160856236-dd12b66c-0ec2-41d2-ae28-acc282eb9d10.png)
+
+
+![image](https://user-images.githubusercontent.com/44027303/160856184-bb26d704-3ef3-4437-8690-80a46015cbf8.png)
+
+
 ```
 Workflow визуально:
 http://prntscr.com/10h71je
