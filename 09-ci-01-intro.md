@@ -40,6 +40,10 @@ https://anclave777.atlassian.net/
 
 ![image](https://user-images.githubusercontent.com/44027303/160856184-bb26d704-3ef3-4437-8690-80a46015cbf8.png)
 
+Скрам:
+
+![image](https://user-images.githubusercontent.com/44027303/161558034-c1b1018e-c4e3-4af2-b726-15df0dba73dd.png)
+
 
 ```
 Workflow визуально:
