@@ -5,6 +5,28 @@
 2. Создайте свой собственный публичный репозиторий на github с произвольным именем.
 3. Скачайте [playbook](./playbook/) из репозитория с домашним заданием и перенесите его в свой репозиторий.
 
+Ответ:
+
+1.
+```
+root@vagrant:/home/vagrant/devops_learn/temp/dev_ops_learn# ansible --version
+ansible 2.9.6
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = ['/root/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python3/dist-packages/ansible
+  executable location = /usr/bin/ansible
+  python version = 3.8.10 (default, Jun  2 2021, 10:49:15) [GCC 9.4.0]
+```
+
+2.
+```
+https://github.com/anclave-777/dev_ops_learn/tree/main/08-ansible-01-base
+
+3.
+
+![image](https://user-images.githubusercontent.com/44027303/161701879-59f28247-2bf9-4048-985e-d9cded3b2901.png)
+
+
 ## Основная часть
 1. Попробуйте запустить playbook на окружении из `test.yml`, зафиксируйте какое значение имеет факт `some_fact` для указанного хоста при выполнении playbook'a.
 2. Найдите файл с переменными (group_vars) в котором задаётся найденное в первом пункте значение и поменяйте его на 'all default fact'.
