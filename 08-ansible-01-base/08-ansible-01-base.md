@@ -26,8 +26,7 @@ https://github.com/anclave-777/dev_ops_learn/tree/main/08-ansible-01-base
 
 
 3.
-
-![image](https://user-images.githubusercontent.com/44027303/161701879-59f28247-2bf9-4048-985e-d9cded3b2901.png)
+![image](https://user-images.githubusercontent.com/44027303/162034445-b4f07f32-236b-43ce-ad86-aebffce4c23f.png)
 
 
 ## Основная часть
