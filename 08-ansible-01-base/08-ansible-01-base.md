@@ -9,13 +9,16 @@
 
 1.
 ```
-root@vagrant:/home/vagrant/devops_learn/temp/dev_ops_learn# ansible --version
-ansible 2.9.6
+root@vagrant:/home/vagrant/devops_learn/temp/dev_ops_learn#  ansible --version
+ansible [core 2.12.2]
   config file = /etc/ansible/ansible.cfg
   configured module search path = ['/root/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
   ansible python module location = /usr/lib/python3/dist-packages/ansible
+  ansible collection location = /root/.ansible/collections:/usr/share/ansible/collections
   executable location = /usr/bin/ansible
   python version = 3.8.10 (default, Jun  2 2021, 10:49:15) [GCC 9.4.0]
+  jinja version = 2.10.1
+  libyaml = True
 ```
 
 2.
