@@ -43,45 +43,44 @@ https://github.com/anclave-777/dev_ops_learn/tree/main/08-ansible-01-base
 10. В `prod.yml` добавьте новую группу хостов с именем  `local`, в ней разместите localhost с необходимым типом подключения.
 11. Запустите playbook на окружении `prod.yml`. При запуске `ansible` должен запросить у вас пароль. Убедитесь что факты `some_fact` для каждого из хостов определены из верных `group_vars`.
 12. Заполните `README.md` ответами на вопросы. Сделайте `git push` в ветку `master`. В ответе отправьте ссылку на ваш открытый репозиторий с изменённым `playbook` и заполненным `README.md`.
+root@vagrant:/home/vagrant/devops_learn/temp/dev_ops_learn/08-ansible-01-base/playbook# ansible-playbook -i inventory/prod.yml site.yml --ask-vault-pass
+Vault password: 
 
-```bash
-09:02:43 hawk@ubuntu-server playbook ±|master ✗|→ ansible-playbook -i inventory/prod.yml --ask-pass --ask-vault-pass site.yml
-SSH password:
-Vault password:
+PLAY [Print os facts] ********************************************************************************************************************************************************************
 
-PLAY [Print os facts] *************************
-
-TASK [Gathering Facts] *************************
+TASK [Gathering Facts] *******************************************************************************************************************************************************************
 ok: [localhost]
-ok: [ubuntu]
-ok: [centos7]
+ok: [vibrant_snyder]
+ok: [exciting_shirley]
 
-TASK [Print OS] *************************
-ok: [centos7] => {
+TASK [Print OS] **************************************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "Ubuntu"
+}
+ok: [exciting_shirley] => {
     "msg": "CentOS"
 }
-ok: [ubuntu] => {
-    "msg": "Ubuntu"
-}
-ok: [localhost] => {
-    "msg": "Ubuntu"
+ok: [vibrant_snyder] => {
+    "msg": "CentOS"
 }
 
-TASK [Print fact] *************************
-ok: [centos7] => {
+TASK [Print fact] ************************************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "local"
+}
+ok: [exciting_shirley] => {
     "msg": "el default fact"
 }
-ok: [ubuntu] => {
+ok: [vibrant_snyder] => {
     "msg": "deb default fact"
 }
-ok: [localhost] => {
-    "msg": "all default fact"
-}
 
-PLAY RECAP *************************
-centos7                    : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
-localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
-ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+PLAY RECAP *******************************************************************************************************************************************************************************
+exciting_shirley           : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+vibrant_snyder             : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+```
 
 ```
 
