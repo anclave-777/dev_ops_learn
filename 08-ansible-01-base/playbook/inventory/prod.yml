@@ -1,9 +1,13 @@
 ---
   el:
     hosts:
-      centos7:
+      exciting_shirley:
         ansible_connection: docker
   deb:
     hosts:
-      ubuntu:
+      vibrant_snyder:
         ansible_connection: docker
+  local:
+    hosts:
+      localhost:
+        ansible_connection: local
