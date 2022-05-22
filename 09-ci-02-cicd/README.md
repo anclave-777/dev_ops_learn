@@ -24,6 +24,23 @@
 8. Запускаем анализатор повторно - проверяем, что QG пройдены успешно
 9. Делаем скриншот успешного прохождения анализа, прикладываем к решению ДЗ
 
+
+Ответ:
+
+![image](https://user-images.githubusercontent.com/44027303/169684455-9d5e366e-4064-4c5f-be02-5c38e81c1197.png)
+
+
+```
+/opt/sonarqube/sonar-scanner-2.8/bin # ./sonar-scanner --version
+\INFO: Scanner configuration file: /opt/sonarqube/sonar-scanner-2.8/conf/sonar-scanner.properties
+INFO: Project root configuration file: NONE
+INFO: SonarQube Scanner 2.8
+INFO: Java 11.0.10 AdoptOpenJDK (64-bit)
+INFO: Linux 5.4.0-80-generic amd64
+/opt/sonarqube/sonar-scanner-2.8/bin # 
+```
+
+
 ## Знакомство с Nexus
 
 ### Подготовка к выполнению
