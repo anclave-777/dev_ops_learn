@@ -31,13 +31,12 @@
 
 
 ```
-/opt/sonarqube/sonar-scanner-2.8/bin # ./sonar-scanner --version
-\INFO: Scanner configuration file: /opt/sonarqube/sonar-scanner-2.8/conf/sonar-scanner.properties
+bash-5.0# sonar-scanner  --version
+INFO: Scanner configuration file: /opt/sonarqube/sonar-scanner-4.7.0.2747-linux/conf/sonar-scanner.properties
 INFO: Project root configuration file: NONE
-INFO: SonarQube Scanner 2.8
+INFO: SonarScanner 4.7.0.2747
 INFO: Java 11.0.10 AdoptOpenJDK (64-bit)
 INFO: Linux 5.4.0-80-generic amd64
-/opt/sonarqube/sonar-scanner-2.8/bin # 
 ```
 
 
