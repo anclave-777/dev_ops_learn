@@ -39,6 +39,13 @@ INFO: Java 11.0.10 AdoptOpenJDK (64-bit)
 INFO: Linux 5.4.0-80-generic amd64
 ```
 
+![image](https://user-images.githubusercontent.com/44027303/169690163-ddf21f15-86e8-4fa3-b6c4-707666a508e6.png)
+
+
+Успех:
+
+![image](https://user-images.githubusercontent.com/44027303/169694165-66aafa31-2796-4b58-ba5b-9fcf35e0d106.png)
+
 
 ## Знакомство с Nexus
 
