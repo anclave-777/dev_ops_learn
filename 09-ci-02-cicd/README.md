@@ -58,6 +58,9 @@ INFO: Linux 5.4.0-80-generic amd64
 5. Узнаём пароль от admin через `docker exec -it nexus /bin/bash`
 6. Подключаемся под админом, меняем пароль, сохраняем анонимный доступ
 
+![image](https://user-images.githubusercontent.com/44027303/169755860-cb24aa63-0019-45f0-9723-f6c62b69a054.png)
+
+
 ### Основная часть
 
 1. В репозиторий `maven-public` загружаем артефакт с GAV параметрами:
