@@ -61,6 +61,8 @@ INFO: Linux 5.4.0-80-generic amd64
 ![image](https://user-images.githubusercontent.com/44027303/169755860-cb24aa63-0019-45f0-9723-f6c62b69a054.png)
 
 
+https://github.com/anclave-777/dev_ops_learn/blob/main/09-ci-02-cicd/maven-metadata.xml
+
 ### Основная часть
 
 1. В репозиторий `maven-public` загружаем артефакт с GAV параметрами:
