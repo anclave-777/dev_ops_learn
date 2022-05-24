@@ -58,6 +58,8 @@ INFO: Linux 5.4.0-80-generic amd64
 5. Узнаём пароль от admin через `docker exec -it nexus /bin/bash`
 6. Подключаемся под админом, меняем пароль, сохраняем анонимный доступ
 
+Ответ:
+
 ![image](https://user-images.githubusercontent.com/44027303/169755860-cb24aa63-0019-45f0-9723-f6c62b69a054.png)
 
 
@@ -90,6 +92,11 @@ https://github.com/anclave-777/dev_ops_learn/blob/main/09-ci-02-cicd/maven-metad
 2. Запускаем команду `mvn package` в директории с `pom.xml`, ожидаем успешного окончания
 3. Проверяем директорию `~/.m2/repository/`, находим наш артефакт
 4. В ответе присылаем исправленный файл `pom.xml`
+
+Ответ:
+
+https://github.com/anclave-777/dev_ops_learn/blob/main/09-ci-02-cicd/pom.xml
+
 
 ---
 
