@@ -24,6 +24,29 @@
 8. Запускаем анализатор повторно - проверяем, что QG пройдены успешно
 9. Делаем скриншот успешного прохождения анализа, прикладываем к решению ДЗ
 
+
+Ответ:
+
+![image](https://user-images.githubusercontent.com/44027303/169684455-9d5e366e-4064-4c5f-be02-5c38e81c1197.png)
+
+
+```
+bash-5.0# sonar-scanner  --version
+INFO: Scanner configuration file: /opt/sonarqube/sonar-scanner-4.7.0.2747-linux/conf/sonar-scanner.properties
+INFO: Project root configuration file: NONE
+INFO: SonarScanner 4.7.0.2747
+INFO: Java 11.0.10 AdoptOpenJDK (64-bit)
+INFO: Linux 5.4.0-80-generic amd64
+```
+
+![image](https://user-images.githubusercontent.com/44027303/169690163-ddf21f15-86e8-4fa3-b6c4-707666a508e6.png)
+
+
+Успех:
+
+![image](https://user-images.githubusercontent.com/44027303/169694165-66aafa31-2796-4b58-ba5b-9fcf35e0d106.png)
+
+
 ## Знакомство с Nexus
 
 ### Подготовка к выполнению
@@ -34,6 +57,13 @@
 4. Проверяем готовность сервиса через [бразуер](http://localhost:8081)
 5. Узнаём пароль от admin через `docker exec -it nexus /bin/bash`
 6. Подключаемся под админом, меняем пароль, сохраняем анонимный доступ
+
+Ответ:
+
+![image](https://user-images.githubusercontent.com/44027303/169755860-cb24aa63-0019-45f0-9723-f6c62b69a054.png)
+
+
+https://github.com/anclave-777/dev_ops_learn/blob/main/09-ci-02-cicd/maven-metadata.xml
 
 ### Основная часть
 
@@ -62,6 +92,11 @@
 2. Запускаем команду `mvn package` в директории с `pom.xml`, ожидаем успешного окончания
 3. Проверяем директорию `~/.m2/repository/`, находим наш артефакт
 4. В ответе присылаем исправленный файл `pom.xml`
+
+Ответ:
+
+https://github.com/anclave-777/dev_ops_learn/blob/main/09-ci-02-cicd/pom.xml
+
 
 ---
 
