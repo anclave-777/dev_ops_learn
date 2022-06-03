@@ -2,14 +2,20 @@
 
 ## Подготовка к выполнению
 
-1. Установить jenkins по любой из [инструкций](https://www.jenkins.io/download/)
-2. Запустить и проверить работоспособность
-3. Сделать первоначальную настройку
-4. Настроить под свои нужды
-5. Поднять отдельный cloud
-6. Для динамических агентов можно использовать [образ](https://hub.docker.com/repository/docker/aragast/agent)
+1. Установить jenkins по любой из [инструкций](https://www.jenkins.io/download/) +(поставил из деб пакета, установка по инструкции не работает для 20.04)
+2. Запустить и проверить работоспособность +
+3. Сделать первоначальную настройку +
+4. Настроить под свои нужды +
+5. Поднять отдельный cloud +
+6. Для динамических агентов можно использовать [образ](https://hub.docker.com/repository/docker/aragast/agent) +
 7. Обязательный параметр: поставить label для динамических агентов: `ansible_docker`
 8.  Сделать форк репозитория с [playbook](https://github.com/aragastmatb/example-playbook)
+
+![image](https://user-images.githubusercontent.com/44027303/170862964-c5fa8d93-70eb-4bda-af8d-3c715d8fb068.png)
+
+
+![image](https://user-images.githubusercontent.com/44027303/170863358-db76e8cb-eda8-4680-b53c-0aae9f648e71.png)
+
 
 ## Основная часть
 
