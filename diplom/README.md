@@ -69,10 +69,20 @@
    
    б. Альтернативный вариант: используйте один workspace, назвав его *stage*. Пожалуйста, не используйте workspace, создаваемый Terraform-ом по-умолчанию (*default*).
    
-4. Создайте VPC с подсетями в разных зонах доступности.
+4. Создайте VPC с подсетями в разных зонах доступности. +
+
+![image](https://user-images.githubusercontent.com/44027303/175792356-0aa98079-a62d-44c0-80da-f6165ef0a4b6.png)
+
 
 6. Убедитесь, что теперь вы можете выполнить команды `terraform destroy` и `terraform apply` без дополнительных ручных действий.
-7. В случае использования [Terraform Cloud](https://app.terraform.io/) в качестве [backend](https://www.terraform.io/docs/language/settings/backends/index.html) убедитесь, что применение изменений успешно проходит, используя web-интерфейс Terraform cloud.
+
+![image](https://user-images.githubusercontent.com/44027303/175792371-fc60d086-1735-4364-87e2-290d0e903dca.png)
+
+
+![image](https://user-images.githubusercontent.com/44027303/175792363-0e466ce5-dc61-48b6-bd51-b3552435a5e1.png)
+
+
+8. В случае использования [Terraform Cloud](https://app.terraform.io/) в качестве [backend](https://www.terraform.io/docs/language/settings/backends/index.html) убедитесь, что применение изменений успешно проходит, используя web-интерфейс Terraform cloud.
 
 Цель:
 
