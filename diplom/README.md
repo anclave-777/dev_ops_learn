@@ -108,6 +108,7 @@
 Рекомендации:
   - Имя сервера: `you.domain`
   - Характеристики: 2vCPU, 2 RAM, External address (Public) и Internal address.
+  - https://cloud.yandex.com/en/docs/vpc/operations/set-static-ip - для постоянной публичной статики
 
 Цель:
 
