@@ -84,6 +84,10 @@
 
 8. В случае использования [Terraform Cloud](https://app.terraform.io/) в качестве [backend](https://www.terraform.io/docs/language/settings/backends/index.html) убедитесь, что применение изменений успешно проходит, используя web-интерфейс Terraform cloud.
 
+![image](https://user-images.githubusercontent.com/44027303/176266932-5a1fa9d1-ebbe-4123-84e5-8f1e38d3d3db.png)
+
+
+
 Цель:
 
 1. Повсеместно применять IaaC подход при организации (эксплуатации) инфраструктуры.
