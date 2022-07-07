@@ -194,6 +194,17 @@ ___
     - `https://www.you.domain` (WordPress)
 3. На сервере `you.domain` отредактирован upstream для выше указанного URL и он смотрит на виртуальную машину на которой установлен WordPress.
 4. В браузере можно открыть URL `https://www.you.domain` и увидеть главную страницу WordPress.
+
+
+![image](https://user-images.githubusercontent.com/44027303/177786575-995cc77d-3133-460d-b208-63b1c2e0a91a.png)
+
+
+ssh-keygen -f "/root/.ssh/known_hosts" -R "anclave-777.ru"
+ssh-keygen -f "/root/.ssh/known_hosts" -R "db01.anclave-777.ru"
+ssh-keygen -f "/root/.ssh/known_hosts" -R "db02.anclave-777.ru"
+ssh-keygen -f "/root/.ssh/known_hosts" -R "app.anclave-777.ru"
+ssh-keygen -R 51.250.8.175
+
 ---
 ### Установка Gitlab CE и Gitlab Runner
 
@@ -215,6 +226,9 @@ ___
     - `https://gitlab.you.domain` (Gitlab)
 3. На сервере `you.domain` отредактирован upstream для выше указанного URL и он смотрит на виртуальную машину на которой установлен Gitlab.
 3. При любом коммите в репозиторий с WordPress и создании тега (например, v1.0.0) происходит деплой на виртуальную машину.
+
+
+![Uploading image.png…]()
 
 ___
 ### Установка Prometheus, Alert Manager, Node Exporter и Grafana
