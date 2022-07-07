@@ -171,6 +171,9 @@ ssh-keygen -f "/root/.ssh/known_hosts" -R "db02.anclave-777.ru"
 ![image](https://user-images.githubusercontent.com/44027303/177631624-6ebd79d3-659f-462f-b736-7c96ab691ee5.png)
 
 
+![image](https://user-images.githubusercontent.com/44027303/177822403-4e34b3f6-47d5-4640-a8f3-936a031994bc.png)
+
+
 ___
 ### Установка WordPress
 
