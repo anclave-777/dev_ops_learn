@@ -195,14 +195,21 @@ ___
 3. На сервере `you.domain` отредактирован upstream для выше указанного URL и он смотрит на виртуальную машину на которой установлен WordPress.
 4. В браузере можно открыть URL `https://www.you.domain` и увидеть главную страницу WordPress.
 
+![image](https://user-images.githubusercontent.com/44027303/177813204-ebfdcea0-c1b1-4f59-9503-7a712efcea16.png)
+
+
 
 ![image](https://user-images.githubusercontent.com/44027303/177786575-995cc77d-3133-460d-b208-63b1c2e0a91a.png)
 
 
 ssh-keygen -f "/root/.ssh/known_hosts" -R "anclave-777.ru"
+
 ssh-keygen -f "/root/.ssh/known_hosts" -R "db01.anclave-777.ru"
+
 ssh-keygen -f "/root/.ssh/known_hosts" -R "db02.anclave-777.ru"
+
 ssh-keygen -f "/root/.ssh/known_hosts" -R "app.anclave-777.ru"
+
 ssh-keygen -R 51.250.8.175
 
 ---
