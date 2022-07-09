@@ -167,6 +167,8 @@ ___
 ssh-keygen -f "/root/.ssh/known_hosts" -R "anclave-777.ru"
 ssh-keygen -f "/root/.ssh/known_hosts" -R "db01.anclave-777.ru"
 ssh-keygen -f "/root/.ssh/known_hosts" -R "db02.anclave-777.ru"
+ssh-keygen -f "/root/.ssh/known_hosts" -R  "runner.anclave-777.ru"
+ssh-keygen -f "/root/.ssh/known_hosts" -R  "gitlab.anclave-777.ru"
 
 ![image](https://user-images.githubusercontent.com/44027303/177631624-6ebd79d3-659f-462f-b736-7c96ab691ee5.png)
 
