@@ -252,6 +252,9 @@ ssh-keygen -R 51.250.8.175
 3. При любом коммите в репозиторий с WordPress и создании тега (например, v1.0.0) происходит деплой на виртуальную машину.
 
 
+![image](https://user-images.githubusercontent.com/44027303/178355434-ab8c1b18-97f4-4a72-96ed-44c412b35eb9.png)
+
+
 ![Uploading image.png…]()
 
 ___
