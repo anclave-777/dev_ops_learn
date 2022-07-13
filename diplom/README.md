@@ -117,7 +117,7 @@
 
 ## Комментарий
 - https://cloud.yandex.com/en/docs/vpc/operations/set-static-ip - для постоянной публичной статики
-Сделал статику -51.250.8.175
+Сделал статику -51.250.9.24
 
 
 Цель:
@@ -218,7 +218,7 @@ ssh-keygen -f "/root/.ssh/known_hosts" -R "db02.anclave-777.ru"
 
 ssh-keygen -f "/root/.ssh/known_hosts" -R "app.anclave-777.ru"
 
-ssh-keygen -R 51.250.8.175
+ssh-keygen -R 51.250.9.24
 
 ---
 ### Установка Gitlab CE и Gitlab Runner
@@ -258,12 +258,16 @@ ssh-keygen -R 51.250.8.175
 ![image](https://user-images.githubusercontent.com/44027303/178355434-ab8c1b18-97f4-4a72-96ed-44c412b35eb9.png)
 
 
-![Uploading image.png…]()
+![image](https://user-images.githubusercontent.com/44027303/178446871-52c321f4-e36f-4e5d-9d0b-5cad47a7ac83.png)
 
 ___
 ### Установка Prometheus, Alert Manager, Node Exporter и Grafana
 
 Необходимо разработать Ansible роль для установки Prometheus, Alert Manager и Grafana.
+
+
+![Uploading image.png…]()
+
 
 Рекомендации:
   - Имя сервера: `monitoring.you.domain`
