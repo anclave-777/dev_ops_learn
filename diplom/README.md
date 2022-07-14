@@ -98,7 +98,7 @@
 1. Terraform сконфигурирован и создание инфраструктуры посредством Terraform возможно без дополнительных ручных действий.
 2. Полученная конфигурация инфраструктуры является предварительной, поэтому в ходе дальнейшего выполнения задания возможны изменения.
 
-**Результат: Мной зарегестрировано доменное имя и написаны манифесты терраформа для создания инфраструктуры. Создание всей инфраструктуры занимает 2-3 минуты**
+**Результат: Мной зарегестрировано доменное имя и написаны манифесты терраформа для создания инфраструктуры. Создание всей инфраструктуры занимает 2-3 минуты. Для создания инфраструктуры использую Terraform Cloud**
 
 
 ---
@@ -142,7 +142,7 @@
 ![image](https://user-images.githubusercontent.com/44027303/178355839-f3fe0b13-bd2d-4263-b3fe-25609ed342a9.png)
 
 
-**Результат: Написана ансибл роль для nginx letsencrypt proxy. Выполняется командой ansible-playbook  --private-key=/home/vagrant/cloud-terraform/id_rsa  -i hosts front.yml**
+**Результат: Написана ансибл роль для nginx letsencrypt proxy. Выполняется командой ansible-playbook  --private-key=/home/vagrant/cloud-terraform/id_rsa  -i hosts front.yml. В процессе нескольких редеплоев забыл внести ключ  --test-cert, поэтому в дальнейшем на скриншотах периодически встречаются неодобренные сертификаты**
 
 
 ___
@@ -156,7 +156,7 @@ ___
 
 Цель:
 
-1. Получить отказоустойчивый кластер баз данных MySQL.
+1. Получить отказоустойчивый кластер баз данных MySQL. +
 
 Ожидаемые результаты:
 
@@ -166,19 +166,12 @@ ___
 
 **Вы должны понимать, что в рамках обучения это допустимые значения, но в боевой среде использование подобных значений не приемлимо! Считается хорошей практикой использовать логины и пароли повышенного уровня сложности. В которых будут содержаться буквы верхнего и нижнего регистров, цифры, а также специальные символы!**
 
-Выполнено. Подключение Ансибо  реализовал через джамп хост при прыжке через ssh в инвентори файле
-
-ssh-keygen -f "/root/.ssh/known_hosts" -R "anclave-777.ru"
-ssh-keygen -f "/root/.ssh/known_hosts" -R "db01.anclave-777.ru"
-ssh-keygen -f "/root/.ssh/known_hosts" -R "db02.anclave-777.ru"
-ssh-keygen -f "/root/.ssh/known_hosts" -R  "runner.anclave-777.ru"
-ssh-keygen -f "/root/.ssh/known_hosts" -R  "gitlab.anclave-777.ru"
-
 ![image](https://user-images.githubusercontent.com/44027303/177631624-6ebd79d3-659f-462f-b736-7c96ab691ee5.png)
-
 
 ![image](https://user-images.githubusercontent.com/44027303/177822403-4e34b3f6-47d5-4640-a8f3-936a031994bc.png)
 
+
+**Результат: Выполнено. Подключение Ансибо  реализовал через джамп хост при прыжке через ssh в инвентори файле. Команда для выполнения: ansible-playbook  --private-key=/home/vagrant/cloud-terraform/id_rsa  -i hosts MySQL.yml **
 
 ___
 ### Установка WordPress
@@ -198,7 +191,7 @@ ___
 
 Ожидаемые результаты:
 
-1. Виртуальная машина на которой установлен WordPress и Nginx/Apache (на ваше усмотрение).
+1. Виртуальная машина на которой установлен WordPress и Nginx/Apache (на ваше усмотрение). +
 2. В вашей доменной зоне настроена A-запись на внешний адрес reverse proxy:
     - `https://www.you.domain` (WordPress)
 3. На сервере `you.domain` отредактирован upstream для выше указанного URL и он смотрит на виртуальную машину на которой установлен WordPress.
@@ -210,16 +203,14 @@ ___
 
 ![image](https://user-images.githubusercontent.com/44027303/177786575-995cc77d-3133-460d-b208-63b1c2e0a91a.png)
 
+**Результат: Выполнено. Подключение Ансибла к хосту реализовал через джамп хост при прыжке через ssh в инвентори файле**
 
-ssh-keygen -f "/root/.ssh/known_hosts" -R "anclave-777.ru"
+```
+[MySQL:vars]
+ansible_ssh_common_args = '-o  ProxyCommand="ssh -W %h:%p -q -i /home/vagrant/cloud-terraform/id_rsa anclave-777@anclave-777.ru"'
+```
 
-ssh-keygen -f "/root/.ssh/known_hosts" -R "db01.anclave-777.ru"
-
-ssh-keygen -f "/root/.ssh/known_hosts" -R "db02.anclave-777.ru"
-
-ssh-keygen -f "/root/.ssh/known_hosts" -R "app.anclave-777.ru"
-
-ssh-keygen -R 51.250.9.24
+**Команда для выполнения: ansible-playbook  --private-key=/home/vagrant/cloud-terraform/id_rsa  -i hosts wordpress.yml **
 
 ---
 ### Установка Gitlab CE и Gitlab Runner
