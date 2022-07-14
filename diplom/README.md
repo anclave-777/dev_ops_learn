@@ -258,7 +258,7 @@ ssh-keygen -R 51.250.9.24
 ![image](https://user-images.githubusercontent.com/44027303/178355434-ab8c1b18-97f4-4a72-96ed-44c412b35eb9.png)
 
 
-![image](https://user-images.githubusercontent.com/44027303/178446871-52c321f4-e36f-4e5d-9d0b-5cad47a7ac83.png)
+
 
 
 ![image](https://user-images.githubusercontent.com/44027303/178934106-4387b7ce-21b3-4678-94a2-0297033e5395.png)
@@ -270,7 +270,7 @@ ___
 Необходимо разработать Ansible роль для установки Prometheus, Alert Manager и Grafana.
 
 
-![Uploading image.png…]()
+![image](https://user-images.githubusercontent.com/44027303/178942387-4439992d-defd-471e-b228-50e8ec99f4ec.png)
 
 
 Рекомендации:
@@ -280,6 +280,15 @@ ___
 Цель:
 
 1. Получение метрик со всей инфраструктуры.
+
+![image](https://user-images.githubusercontent.com/44027303/178446871-52c321f4-e36f-4e5d-9d0b-5cad47a7ac83.png)
+
+![image](https://user-images.githubusercontent.com/44027303/178942485-9f313e64-379e-48d7-9cbf-c86f1f169956.png)
+
+![image](https://user-images.githubusercontent.com/44027303/178943018-e69cfd51-5532-45bc-b7de-7b433cfe6b63.png)
+
+![Uploading image.png…]()
+
 
 Ожидаемые результаты:
 
