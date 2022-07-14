@@ -221,16 +221,18 @@ ansible_ssh_common_args = '-o  ProxyCommand="ssh -W %h:%p -q -i /home/vagrant/cl
 ---
 ### Установка Gitlab CE и Gitlab Runner
 
+## Комментарий
 
 Несколько дней неудавалось поставить гитлаб из ансибл роли из-за ошибки:
 ![erro_gitlab](https://user-images.githubusercontent.com/44027303/178323354-7534efd3-561c-4726-97a8-4314be3e61be.png)
 
-Решения так и не нашел. Собрал свой образ packerом:
+Проблема была в нехватке места на прокси сервере(добавил диск побольше), после в зависании таски с рекнфигурацией gitlab. Собрал свой образ packerом:
 
 
 ![image](https://user-images.githubusercontent.com/44027303/178323105-65523ca5-6e75-4b83-94d1-a7dc4d63bff3.png)
 
-Код образа приложу к решению
+Код образа приложу к решению. Пароль сбрасывается на сервере командой `sudo gitlab-rake "gitlab:password:reset[root]"`
+
 
 
 Необходимо настроить CI/CD систему для автоматического развертывания приложения при изменении кода.
@@ -252,13 +254,15 @@ ansible_ssh_common_args = '-o  ProxyCommand="ssh -W %h:%p -q -i /home/vagrant/cl
 3. На сервере `you.domain` отредактирован upstream для выше указанного URL и он смотрит на виртуальную машину на которой установлен Gitlab.
 3. При любом коммите в репозиторий с WordPress и создании тега (например, v1.0.0) происходит деплой на виртуальную машину.
 
+Результат: ansible-playbook  --private-key=/home/vagrant/cloud-terraform/id_rsa  -i hosts gitlab_runner.yml
+
 
 ![image](https://user-images.githubusercontent.com/44027303/178355434-ab8c1b18-97f4-4a72-96ed-44c412b35eb9.png)
 
 
 ![image](https://user-images.githubusercontent.com/44027303/178934106-4387b7ce-21b3-4678-94a2-0297033e5395.png)
 
-
+**Результат. Выполнено, роль раннера отыгрывается командой ansible-playbook  --private-key=/home/vagrant/cloud-terraform/id_rsa  -i hosts gitlab_runner.yml**
 ___
 ### Установка Prometheus, Alert Manager, Node Exporter и Grafana
 
@@ -287,9 +291,9 @@ ___
 
 1. Интерфейсы Prometheus, Alert Manager и Grafana доступены по https.
 2. В вашей доменной зоне настроены A-записи на внешний адрес reverse proxy:
-  - `https://grafana.you.domain` (Grafana)
-  - `https://prometheus.you.domain` (Prometheus)
-  - `https://alertmanager.you.domain` (Alert Manager)
+  - `https://grafana.you.domain` (Grafana) +
+  - `https://prometheus.you.domain` (Prometheus) +
+  - `https://alertmanager.you.domain` (Alert Manager) +
 3. На сервере `you.domain` отредактированы upstreams для выше указанных URL и они смотрят на виртуальную машину на которой установлены Prometheus, Alert Manager и Grafana.
 4. На всех серверах установлен Node Exporter и его метрики доступны Prometheus.
 5. У Alert Manager есть необходимый [набор правил](https://awesome-prometheus-alerts.grep.to/rules.html) для создания алертов.
