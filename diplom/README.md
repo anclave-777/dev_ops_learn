@@ -216,7 +216,7 @@ ansible_ssh_common_args = '-o  ProxyCommand="ssh -W %h:%p -q -i /home/vagrant/cl
 
 
 
-**Команда для выполнения: ansible-playbook  --private-key=/home/vagrant/cloud-terraform/id_rsa  -i hosts wordpress.yml **
+**Команда для выполнения: ansible-playbook  --private-key=/home/vagrant/cloud-terraform/id_rsa  -i hosts wordpress.yml**
 
 ---
 ### Установка Gitlab CE и Gitlab Runner
