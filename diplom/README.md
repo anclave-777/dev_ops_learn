@@ -301,15 +301,20 @@ ___
 
 1. Получение метрик со всей инфраструктуры.
 
-![image](https://user-images.githubusercontent.com/44027303/178942387-4439992d-defd-471e-b228-50e8ec99f4ec.png)
 
+**Успешный деплой**
 ![image](https://user-images.githubusercontent.com/44027303/178446871-52c321f4-e36f-4e5d-9d0b-5cad47a7ac83.png)
 
+**Прометей**
+![image](https://user-images.githubusercontent.com/44027303/178942387-4439992d-defd-471e-b228-50e8ec99f4ec.png)
+
+**Графана**
 ![image](https://user-images.githubusercontent.com/44027303/178942485-9f313e64-379e-48d7-9cbf-c86f1f169956.png)
 
+**Алерт менеджер**
 ![image](https://user-images.githubusercontent.com/44027303/178943018-e69cfd51-5532-45bc-b7de-7b433cfe6b63.png)
 
-![Uploading image.png…]()
+
 
 
 Ожидаемые результаты:
