@@ -258,9 +258,6 @@ ssh-keygen -R 51.250.9.24
 ![image](https://user-images.githubusercontent.com/44027303/178355434-ab8c1b18-97f4-4a72-96ed-44c412b35eb9.png)
 
 
-
-
-
 ![image](https://user-images.githubusercontent.com/44027303/178934106-4387b7ce-21b3-4678-94a2-0297033e5395.png)
 
 
@@ -269,10 +266,6 @@ ___
 
 Необходимо разработать Ansible роль для установки Prometheus, Alert Manager и Grafana.
 
-
-![image](https://user-images.githubusercontent.com/44027303/178942387-4439992d-defd-471e-b228-50e8ec99f4ec.png)
-
-
 Рекомендации:
   - Имя сервера: `monitoring.you.domain`
   - Характеристики: 4vCPU, 4 RAM, Internal address.
@@ -280,6 +273,8 @@ ___
 Цель:
 
 1. Получение метрик со всей инфраструктуры.
+
+![image](https://user-images.githubusercontent.com/44027303/178942387-4439992d-defd-471e-b228-50e8ec99f4ec.png)
 
 ![image](https://user-images.githubusercontent.com/44027303/178446871-52c321f4-e36f-4e5d-9d0b-5cad47a7ac83.png)
 
