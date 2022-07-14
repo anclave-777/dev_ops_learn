@@ -260,6 +260,10 @@ ssh-keygen -R 51.250.9.24
 
 ![image](https://user-images.githubusercontent.com/44027303/178446871-52c321f4-e36f-4e5d-9d0b-5cad47a7ac83.png)
 
+
+![image](https://user-images.githubusercontent.com/44027303/178934106-4387b7ce-21b3-4678-94a2-0297033e5395.png)
+
+
 ___
 ### Установка Prometheus, Alert Manager, Node Exporter и Grafana
 
@@ -304,6 +308,8 @@ ___
   - `https://grafana.you.domain` (Grafana)
   - `https://prometheus.you.domain` (Prometheus)
   - `https://alertmanager.you.domain` (Alert Manager)
+  
+  
 4. Все репозитории рекомендуется хранить на одном из ресурсов ([github.com](https://github.com) или [gitlab.com](https://gitlab.com)).
 
 ---
