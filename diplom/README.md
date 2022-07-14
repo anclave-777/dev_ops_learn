@@ -171,7 +171,9 @@ ___
 ![image](https://user-images.githubusercontent.com/44027303/177822403-4e34b3f6-47d5-4640-a8f3-936a031994bc.png)
 
 
-**Результат: Выполнено. Подключение Ансибо  реализовал через джамп хост при прыжке через ssh в инвентори файле. Команда для выполнения: ansible-playbook  --private-key=/home/vagrant/cloud-terraform/id_rsa  -i hosts MySQL.yml **
+
+
+**Результат: Выполнено. Подключение Ансибо  реализовал через джамп хост при прыжке через ssh в инвентори файле. Команда для выполнения: ansible-playbook  --private-key=/home/vagrant/cloud-terraform/id_rsa  -i hosts MySQL.yml**
 
 ___
 ### Установка WordPress
