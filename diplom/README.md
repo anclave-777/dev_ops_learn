@@ -312,7 +312,6 @@ ___
 ![image](https://user-images.githubusercontent.com/44027303/178942485-9f313e64-379e-48d7-9cbf-c86f1f169956.png)
 
 **Алерт менеджер**
-![image](https://user-images.githubusercontent.com/44027303/178943018-e69cfd51-5532-45bc-b7de-7b433cfe6b63.png)
 
 
 
