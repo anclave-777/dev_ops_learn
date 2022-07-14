@@ -218,11 +218,14 @@ ___
 3. На сервере `you.domain` отредактирован upstream для выше указанного URL и он смотрит на виртуальную машину на которой установлен WordPress.
 4. В браузере можно открыть URL `https://www.you.domain` и увидеть главную страницу WordPress.
 
+**Успешный деплой wordpress**
 ![image](https://user-images.githubusercontent.com/44027303/177813204-ebfdcea0-c1b1-4f59-9503-7a712efcea16.png)
 
 
-
+**Заглавная страница wordpress**
 ![image](https://user-images.githubusercontent.com/44027303/177786575-995cc77d-3133-460d-b208-63b1c2e0a91a.png)
+
+
 
 **Результат: Выполнено. Подключение Ансибла к хосту реализовал через джамп хост при прыжке через ssh в инвентори файле**
 
@@ -247,7 +250,7 @@ ansible_ssh_common_args = '-o  ProxyCommand="ssh -W %h:%p -q -i /home/vagrant/cl
 
 Проблема была в нехватке места на прокси сервере(добавил диск побольше), после в зависании таски с рекнфигурацией gitlab. Собрал свой образ packerом:
 
-
+***Успешная сборка*
 ![image](https://user-images.githubusercontent.com/44027303/178323105-65523ca5-6e75-4b83-94d1-a7dc4d63bff3.png)
 
 Код образа приложу к решению. Пароль сбрасывается на сервере командой `sudo gitlab-rake "gitlab:password:reset[root]"`
@@ -273,13 +276,16 @@ ansible_ssh_common_args = '-o  ProxyCommand="ssh -W %h:%p -q -i /home/vagrant/cl
 3. На сервере `you.domain` отредактирован upstream для выше указанного URL и он смотрит на виртуальную машину на которой установлен Gitlab.
 3. При любом коммите в репозиторий с WordPress и создании тега (например, v1.0.0) происходит деплой на виртуальную машину.
 
-Результат: ansible-playbook  --private-key=/home/vagrant/cloud-terraform/id_rsa  -i hosts gitlab_runner.yml
 
 
+**успешно запущенный сервер**
 ![image](https://user-images.githubusercontent.com/44027303/178355434-ab8c1b18-97f4-4a72-96ed-44c412b35eb9.png)
 
 
+**Зарегестрированный раннер**
 ![image](https://user-images.githubusercontent.com/44027303/178934106-4387b7ce-21b3-4678-94a2-0297033e5395.png)
+
+
 
 **Результат. Выполнено, роль раннера отыгрывается командой ansible-playbook  --private-key=/home/vagrant/cloud-terraform/id_rsa  -i hosts gitlab_runner.yml**
 ___
