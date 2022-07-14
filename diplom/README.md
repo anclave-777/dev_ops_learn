@@ -73,11 +73,14 @@
    
 4. Создайте VPC с подсетями в разных зонах доступности. +
 
+**Создал несколько сетей**
+
 ![image](https://user-images.githubusercontent.com/44027303/175792356-0aa98079-a62d-44c0-80da-f6165ef0a4b6.png)
 
 
 6. Убедитесь, что теперь вы можете выполнить команды `terraform destroy` и `terraform apply` без дополнительных ручных действий.
 
+**terraform destroy**
 ![image](https://user-images.githubusercontent.com/44027303/175792371-fc60d086-1735-4364-87e2-290d0e903dca.png)
 
 
