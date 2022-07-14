@@ -205,10 +205,14 @@ ___
 
 **Результат: Выполнено. Подключение Ансибла к хосту реализовал через джамп хост при прыжке через ssh в инвентори файле**
 
+
+
 ```
 [MySQL:vars]
 ansible_ssh_common_args = '-o  ProxyCommand="ssh -W %h:%p -q -i /home/vagrant/cloud-terraform/id_rsa anclave-777@anclave-777.ru"'
 ```
+
+
 
 **Команда для выполнения: ansible-playbook  --private-key=/home/vagrant/cloud-terraform/id_rsa  -i hosts wordpress.yml **
 
