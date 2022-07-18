@@ -287,7 +287,11 @@ ansible_ssh_common_args = '-o  ProxyCommand="ssh -W %h:%p -q -i /home/vagrant/cl
 
 
 
-**Результат. Выполнено, роль раннера отыгрывается командой ansible-playbook  --private-key=/home/vagrant/cloud-terraform/id_rsa  -i hosts gitlab_runner.yml**
+**Результат. Выполнено, роль раннера отыгрывается командами:**
+**ansible-playbook  --private-key=/home/vagrant/cloud-terraform/id_rsa  -i hosts gitlab.yml**
+**ansible-playbook  --private-key=/home/vagrant/cloud-terraform/id_rsa  -i hosts gitlab_runner.yml**
+
+**Выполнение джобов на gitlab в сторону wordpress успешно**
 ___
 ### Установка Prometheus, Alert Manager, Node Exporter и Grafana
 
@@ -342,6 +346,9 @@ ___
 
 *Примечание: дашборды со звёздочкой являются опциональными заданиями повышенной сложности их выполнение желательно, но не обязательно.*
 
+**Результат.**
+**Все указанные в задаче сервисы устанавливаются командой ansible-playbook  --private-key=/home/vagrant/cloud-terraform/id_rsa  -i hosts monitoring.yml**
+**Данные из прометея успешно импортирются в grafana и alertmanager осуществляет  мониторинг хостов **
 ---
 ## Что необходимо для сдачи задания?
 
@@ -353,7 +360,7 @@ ___
   - `https://grafana.you.domain` (Grafana)
   - `https://prometheus.you.domain` (Prometheus)
   - `https://alertmanager.you.domain` (Alert Manager)
-  ц
+
   
 4. Все репозитории рекомендуется хранить на одном из ресурсов ([github.com](https://github.com) или [gitlab.com](https://gitlab.com)).
 
