@@ -48,7 +48,7 @@ scrape_configs:
     static_configs:
      - targets: ["runner.anclave-777.ru:9100"]
 
-  - job_name: "zhukops_node"
+  - job_name: "anclave-777_node"
     scrape_interval: 5s
     static_configs:
      - targets: ["anclave-777.ru:9100"]
