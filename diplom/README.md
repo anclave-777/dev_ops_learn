@@ -314,6 +314,11 @@ ___
 **Графана**
 ![image](https://user-images.githubusercontent.com/44027303/178942485-9f313e64-379e-48d7-9cbf-c86f1f169956.png)
 
+**Графана с импортированными метриками прометея**
+
+![image](https://user-images.githubusercontent.com/44027303/179463095-cecc56eb-f6b6-43d5-9209-7b2c990b5806.png)
+
+
 **Алерт менеджер**
 
 
