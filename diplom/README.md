@@ -319,7 +319,9 @@ ___
 ![image](https://user-images.githubusercontent.com/44027303/179463095-cecc56eb-f6b6-43d5-9209-7b2c990b5806.png)
 
 
-**Алерт менеджер**
+**Алерт менеджер c отключенным сервером Mysql**
+
+![image](https://user-images.githubusercontent.com/44027303/179473661-edabd20b-6ed1-4657-8b17-d8b37c79e84e.png)
 
 
 
