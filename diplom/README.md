@@ -353,7 +353,7 @@ ___
   - `https://grafana.you.domain` (Grafana)
   - `https://prometheus.you.domain` (Prometheus)
   - `https://alertmanager.you.domain` (Alert Manager)
-  
+  ц
   
 4. Все репозитории рекомендуется хранить на одном из ресурсов ([github.com](https://github.com) или [gitlab.com](https://gitlab.com)).
 
