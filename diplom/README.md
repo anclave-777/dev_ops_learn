@@ -308,6 +308,9 @@ ___
 **Прометей**
 ![image](https://user-images.githubusercontent.com/44027303/178942387-4439992d-defd-471e-b228-50e8ec99f4ec.png)
 
+![image](https://user-images.githubusercontent.com/44027303/179457963-decf02d1-5fc3-4a32-b17f-557011883b1d.png)
+
+
 **Графана**
 ![image](https://user-images.githubusercontent.com/44027303/178942485-9f313e64-379e-48d7-9cbf-c86f1f169956.png)
 
