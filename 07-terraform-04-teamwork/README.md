@@ -12,6 +12,19 @@
 1. Зарегистрируйте этот репозиторий в [https://app.terraform.io/](https://app.terraform.io/).
 1. Выполните plan и apply. 
 
+
+
+**plan**
+
+
+![image](https://user-images.githubusercontent.com/44027303/180056663-1701ad47-8232-4c10-ac2f-ac803f7c4644.png)
+
+
+**apply**
+
+![image](https://user-images.githubusercontent.com/44027303/180058076-88c4d579-91d6-4850-8e34-99c44ae8a853.png)
+
+
 В качестве результата задания приложите снимок экрана с успешным применением конфигурации.
 
 ## Задача 2. Написать серверный конфиг для атлантиса. 
